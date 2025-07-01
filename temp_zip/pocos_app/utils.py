@@ -1,7 +1,7 @@
 import random
 import pandas as pd
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import calendar
 import io
 import openpyxl
@@ -193,7 +193,7 @@ def gerar_tabela_dados(parametros):
     hidrometro_acumulado = [round(v, 3) for v in hidrometro_acumulado]
     
     # Obter vazões e horas/dia para cada data com base no mês
-    vazoes = []
+    
     horas_dia = [] # Corresponde a 'Tempo de Captação (h)'
     meses_map_rev = {v: k for k, v in {
         'jan': 1, 'fev': 2, 'mar': 3, 'abr': 4, 'mai': 5, 'jun': 6,
@@ -202,22 +202,33 @@ def gerar_tabela_dados(parametros):
     
     volume_acumulado_mensal = {}
     volume_diario_list = []
+    tempo_diario_list = []
     volume_acum_mensal_list = []
+    vazoes = []
+    hora_list = []
     
     for i, data_dt in enumerate(datas_dt):
         mes_num = data_dt.month
         mes_codigo = meses_map_rev.get(mes_num, 'jan')
         
+        hora = 8
+        minuto = random.randint(0, 59)        
+        horario_aleatorio = (hora, minuto)
+        hora_list.append(horario_aleatorio)
         vazao_mes = parametros.get(f'vazao_{mes_codigo}', 0.0)
         horas_dia_mes = parametros.get(f'horas_{mes_codigo}', 0.0)
         
-        vazoes.append(vazao_mes)
+        
         horas_dia.append(horas_dia_mes)
         
         # Calcular Volume diário (m3) - Usando a diferença do hidrômetro diário
         volume_diario = valores_hidrometro_diario[i]
+        tempo_diario = valores_horimetro_diario[i]
         volume_diario_list.append(round(volume_diario, 3))
-        
+        tempo_diario_list.append(round(tempo_diario, 3))
+
+        vazoes.append(round((volume_diario / tempo_diario),2))
+
         # Calcular Volume acumulado Mensal (m3)
         chave_mes_ano = data_dt.strftime('%Y-%m')
         volume_acumulado_mensal[chave_mes_ano] = volume_acumulado_mensal.get(chave_mes_ano, 0) + volume_diario
@@ -226,10 +237,10 @@ def gerar_tabela_dados(parametros):
     # Criar DataFrame com as colunas na ordem desejada pelo template
     df = pd.DataFrame({
         'Data': datas_str,
-        'Hora': [''] * num_datas, # Coluna 'Hora' vazia por enquanto
+        'Hora': hora_list,
         'Horimetro': horimetro_acumulado,
         'Medidor de Vazão': hidrometro_acumulado, # Mapeando Hidrômetro para Medidor de Vazão
-        'Tempo de Captação (h)': horas_dia, # Mapeando Horas/Dia
+        'Tempo de Captação (h)': tempo_diario_list, # Mapeando Horas/Dia
         'Volume diário (m3)': volume_diario_list,
         'Volume acumulado Mensal (m3)': volume_acum_mensal_list,
         'Valor': vazoes, # Mapeando Vazão m³/h para Valor (Vazão Média - diária)
