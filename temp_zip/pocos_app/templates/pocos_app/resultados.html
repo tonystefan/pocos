@@ -1,0 +1,32 @@
+{% extends 'pocos_app/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h2>Resultados Gerados</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <h4>Tabela gerada com sucesso!</h4>
+                    <p>A tabela foi gerada com base nos parâmetros fornecidos. Você pode visualizá-la abaixo ou exportá-la para Excel.</p>
+                </div>
+                
+                <div class="text-center mb-4">
+                    <a href="{% url 'exportar_xlsx' %}" class="btn btn-success btn-lg">
+                        <i class="bi bi-file-earmark-excel"></i> Exportar para Excel
+                    </a>
+                    <a href="{% url 'index' %}" class="btn btn-secondary btn-lg ms-2">
+                        Voltar ao Formulário
+                    </a>
+                </div>
+                
+                <div class="table-responsive">
+                    {{ tabela|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

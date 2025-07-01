@@ -1,0 +1,372 @@
+{% extends 'pocos_app/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h2>Parâmetros para Geração de Dados</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'gerar_tabela' %}">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4>Parâmetros Gerais</h4>
+                            <div class="form-group">
+                                <label for="{{ form.ano_inicio.id_for_label }}">{{ form.ano_inicio.label }}</label>
+                                {{ form.ano_inicio.errors }}
+                                <input type="number" name="{{ form.ano_inicio.html_name }}" id="{{ form.ano_inicio.id_for_label }}" 
+                                       class="form-control" value="{{ form.ano_inicio.value|default:2023 }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.ano_fim.id_for_label }}">{{ form.ano_fim.label }}</label>
+                                {{ form.ano_fim.errors }}
+                                <input type="number" name="{{ form.ano_fim.html_name }}" id="{{ form.ano_fim.id_for_label }}" 
+                                       class="form-control" value="{{ form.ano_fim.value|default:2024 }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.horimetro_inicial.id_for_label }}">{{ form.horimetro_inicial.label }}</label>
+                                {{ form.horimetro_inicial.errors }}
+                                <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" 
+                                       class="form-control" value="{{ form.horimetro_inicial.value|default:0 }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.horimetro_final.id_for_label }}">{{ form.horimetro_final.label }}</label>
+                                {{ form.horimetro_final.errors }}
+                                <input type="number" step="0.001" name="{{ form.horimetro_final.html_name }}" id="{{ form.horimetro_final.id_for_label }}" 
+                                       class="form-control" value="{{ form.horimetro_final.value|default:50 }}">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h4>&nbsp;</h4>
+                            <div class="form-group">
+                                <label for="{{ form.hidrometro_inicial.id_for_label }}">{{ form.hidrometro_inicial.label }}</label>
+                                {{ form.hidrometro_inicial.errors }}
+                                <input type="number" step="0.001" name="{{ form.hidrometro_inicial.html_name }}" id="{{ form.hidrometro_inicial.id_for_label }}" 
+                                       class="form-control" value="{{ form.hidrometro_inicial.value|default:0 }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.hidrometro_final.id_for_label }}">{{ form.hidrometro_final.label }}</label>
+                                {{ form.hidrometro_final.errors }}
+                                <input type="number" step="0.001" name="{{ form.hidrometro_final.html_name }}" id="{{ form.hidrometro_final.id_for_label }}" 
+                                       class="form-control" value="{{ form.hidrometro_final.value|default:50 }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.max_horimetro_diario.id_for_label }}">{{ form.max_horimetro_diario.label }}</label>
+                                {{ form.max_horimetro_diario.errors }}
+                                <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" 
+                                       class="form-control" value="{{ form.max_horimetro_diario.value|default:0.5 }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
+                                {{ form.max_hidrometro_diario.errors }}
+                                <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" 
+                                       class="form-control" value="{{ form.max_hidrometro_diario.value|default:0.5 }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4>Parâmetros Mensais</h4>
+                    
+                    <div class="row">
+                        <!-- Janeiro a Março -->
+                        <div class="col-md-4">
+                            <div class="month-section">
+                                <h5 class="month-title">Janeiro</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_jan.id_for_label }}">{{ form.vazao_jan.label }}</label>
+                                    {{ form.vazao_jan.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_jan.html_name }}" id="{{ form.vazao_jan.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_jan.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_jan.id_for_label }}">{{ form.horas_jan.label }}</label>
+                                    {{ form.horas_jan.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_jan.html_name }}" id="{{ form.horas_jan.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_jan.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_jan.id_for_label }}">{{ form.dias_jan.label }}</label>
+                                    {{ form.dias_jan.errors }}
+                                    <input type="number" name="{{ form.dias_jan.html_name }}" id="{{ form.dias_jan.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_jan.value|default:31 }}">
+                                </div>
+                            </div>
+                            
+                            <div class="month-section">
+                                <h5 class="month-title">Fevereiro</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_fev.id_for_label }}">{{ form.vazao_fev.label }}</label>
+                                    {{ form.vazao_fev.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_fev.html_name }}" id="{{ form.vazao_fev.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_fev.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_fev.id_for_label }}">{{ form.horas_fev.label }}</label>
+                                    {{ form.horas_fev.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_fev.html_name }}" id="{{ form.horas_fev.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_fev.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_fev.id_for_label }}">{{ form.dias_fev.label }}</label>
+                                    {{ form.dias_fev.errors }}
+                                    <input type="number" name="{{ form.dias_fev.html_name }}" id="{{ form.dias_fev.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_fev.value|default:28 }}">
+                                </div>
+                            </div>
+                            
+                            <div class="month-section">
+                                <h5 class="month-title">Março</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_mar.id_for_label }}">{{ form.vazao_mar.label }}</label>
+                                    {{ form.vazao_mar.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_mar.html_name }}" id="{{ form.vazao_mar.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_mar.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_mar.id_for_label }}">{{ form.horas_mar.label }}</label>
+                                    {{ form.horas_mar.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_mar.html_name }}" id="{{ form.horas_mar.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_mar.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_mar.id_for_label }}">{{ form.dias_mar.label }}</label>
+                                    {{ form.dias_mar.errors }}
+                                    <input type="number" name="{{ form.dias_mar.html_name }}" id="{{ form.dias_mar.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_mar.value|default:31 }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Abril a Junho -->
+                        <div class="col-md-4">
+                            <div class="month-section">
+                                <h5 class="month-title">Abril</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_abr.id_for_label }}">{{ form.vazao_abr.label }}</label>
+                                    {{ form.vazao_abr.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_abr.html_name }}" id="{{ form.vazao_abr.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_abr.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_abr.id_for_label }}">{{ form.horas_abr.label }}</label>
+                                    {{ form.horas_abr.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_abr.html_name }}" id="{{ form.horas_abr.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_abr.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_abr.id_for_label }}">{{ form.dias_abr.label }}</label>
+                                    {{ form.dias_abr.errors }}
+                                    <input type="number" name="{{ form.dias_abr.html_name }}" id="{{ form.dias_abr.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_abr.value|default:30 }}">
+                                </div>
+                            </div>
+                            
+                            <div class="month-section">
+                                <h5 class="month-title">Maio</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_mai.id_for_label }}">{{ form.vazao_mai.label }}</label>
+                                    {{ form.vazao_mai.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_mai.html_name }}" id="{{ form.vazao_mai.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_mai.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_mai.id_for_label }}">{{ form.horas_mai.label }}</label>
+                                    {{ form.horas_mai.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_mai.html_name }}" id="{{ form.horas_mai.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_mai.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_mai.id_for_label }}">{{ form.dias_mai.label }}</label>
+                                    {{ form.dias_mai.errors }}
+                                    <input type="number" name="{{ form.dias_mai.html_name }}" id="{{ form.dias_mai.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_mai.value|default:31 }}">
+                                </div>
+                            </div>
+                            
+                            <div class="month-section">
+                                <h5 class="month-title">Junho</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_jun.id_for_label }}">{{ form.vazao_jun.label }}</label>
+                                    {{ form.vazao_jun.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_jun.html_name }}" id="{{ form.vazao_jun.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_jun.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_jun.id_for_label }}">{{ form.horas_jun.label }}</label>
+                                    {{ form.horas_jun.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_jun.html_name }}" id="{{ form.horas_jun.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_jun.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_jun.id_for_label }}">{{ form.dias_jun.label }}</label>
+                                    {{ form.dias_jun.errors }}
+                                    <input type="number" name="{{ form.dias_jun.html_name }}" id="{{ form.dias_jun.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_jun.value|default:30 }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Julho a Setembro -->
+                        <div class="col-md-4">
+                            <div class="month-section">
+                                <h5 class="month-title">Julho</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_jul.id_for_label }}">{{ form.vazao_jul.label }}</label>
+                                    {{ form.vazao_jul.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_jul.html_name }}" id="{{ form.vazao_jul.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_jul.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_jul.id_for_label }}">{{ form.horas_jul.label }}</label>
+                                    {{ form.horas_jul.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_jul.html_name }}" id="{{ form.horas_jul.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_jul.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_jul.id_for_label }}">{{ form.dias_jul.label }}</label>
+                                    {{ form.dias_jul.errors }}
+                                    <input type="number" name="{{ form.dias_jul.html_name }}" id="{{ form.dias_jul.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_jul.value|default:31 }}">
+                                </div>
+                            </div>
+                            
+                            <div class="month-section">
+                                <h5 class="month-title">Agosto</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_ago.id_for_label }}">{{ form.vazao_ago.label }}</label>
+                                    {{ form.vazao_ago.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_ago.html_name }}" id="{{ form.vazao_ago.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_ago.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_ago.id_for_label }}">{{ form.horas_ago.label }}</label>
+                                    {{ form.horas_ago.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_ago.html_name }}" id="{{ form.horas_ago.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_ago.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_ago.id_for_label }}">{{ form.dias_ago.label }}</label>
+                                    {{ form.dias_ago.errors }}
+                                    <input type="number" name="{{ form.dias_ago.html_name }}" id="{{ form.dias_ago.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_ago.value|default:31 }}">
+                                </div>
+                            </div>
+                            
+                            <div class="month-section">
+                                <h5 class="month-title">Setembro</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_set.id_for_label }}">{{ form.vazao_set.label }}</label>
+                                    {{ form.vazao_set.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_set.html_name }}" id="{{ form.vazao_set.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_set.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_set.id_for_label }}">{{ form.horas_set.label }}</label>
+                                    {{ form.horas_set.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_set.html_name }}" id="{{ form.horas_set.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_set.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_set.id_for_label }}">{{ form.dias_set.label }}</label>
+                                    {{ form.dias_set.errors }}
+                                    <input type="number" name="{{ form.dias_set.html_name }}" id="{{ form.dias_set.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_set.value|default:30 }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <!-- Outubro a Dezembro -->
+                        <div class="col-md-4">
+                            <div class="month-section">
+                                <h5 class="month-title">Outubro</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_out.id_for_label }}">{{ form.vazao_out.label }}</label>
+                                    {{ form.vazao_out.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_out.html_name }}" id="{{ form.vazao_out.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_out.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_out.id_for_label }}">{{ form.horas_out.label }}</label>
+                                    {{ form.horas_out.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_out.html_name }}" id="{{ form.horas_out.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_out.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_out.id_for_label }}">{{ form.dias_out.label }}</label>
+                                    {{ form.dias_out.errors }}
+                                    <input type="number" name="{{ form.dias_out.html_name }}" id="{{ form.dias_out.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_out.value|default:31 }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="month-section">
+                                <h5 class="month-title">Novembro</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_nov.id_for_label }}">{{ form.vazao_nov.label }}</label>
+                                    {{ form.vazao_nov.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_nov.html_name }}" id="{{ form.vazao_nov.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_nov.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_nov.id_for_label }}">{{ form.horas_nov.label }}</label>
+                                    {{ form.horas_nov.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_nov.html_name }}" id="{{ form.horas_nov.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_nov.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_nov.id_for_label }}">{{ form.dias_nov.label }}</label>
+                                    {{ form.dias_nov.errors }}
+                                    <input type="number" name="{{ form.dias_nov.html_name }}" id="{{ form.dias_nov.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_nov.value|default:30 }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="month-section">
+                                <h5 class="month-title">Dezembro</h5>
+                                <div class="form-group">
+                                    <label for="{{ form.vazao_dez.id_for_label }}">{{ form.vazao_dez.label }}</label>
+                                    {{ form.vazao_dez.errors }}
+                                    <input type="number" step="0.001" name="{{ form.vazao_dez.html_name }}" id="{{ form.vazao_dez.id_for_label }}" 
+                                           class="form-control" value="{{ form.vazao_dez.value|default:0.03 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.horas_dez.id_for_label }}">{{ form.horas_dez.label }}</label>
+                                    {{ form.horas_dez.errors }}
+                                    <input type="number" step="0.01" name="{{ form.horas_dez.html_name }}" id="{{ form.horas_dez.id_for_label }}" 
+                                           class="form-control" value="{{ form.horas_dez.value|default:0.40 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.dias_dez.id_for_label }}">{{ form.dias_dez.label }}</label>
+                                    {{ form.dias_dez.errors }}
+                                    <input type="number" name="{{ form.dias_dez.html_name }}" id="{{ form.dias_dez.id_for_label }}" 
+                                           class="form-control" value="{{ form.dias_dez.value|default:31 }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Gerar Tabela</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
