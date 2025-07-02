@@ -212,8 +212,8 @@ def gerar_tabela_dados(parametros):
         mes_codigo = meses_map_rev.get(mes_num, 'jan')
         
         hora = 8
-        minuto = random.randint(0, 59)        
-        horario_aleatorio = (hora, minuto)
+        minuto = random.randint(10, 59)        
+        horario_aleatorio = (f"{hora}:{minuto}")
         hora_list.append(horario_aleatorio)
         vazao_mes = parametros.get(f'vazao_{mes_codigo}', 0.0)
         horas_dia_mes = parametros.get(f'horas_{mes_codigo}', 0.0)
@@ -267,6 +267,8 @@ def exportar_para_xlsx(df, parametros):
     sheet.title = 'Planilha1'
 
     # --- Estilos --- (Opcional, mas melhora a aparência)
+    sheet.freeze_panes = 'A7'
+    sheet.sheet_view.showGridLines = False
     header_font = Font(name='Calibri', size=11, bold=True)
     title_font = Font(name='Calibri', size=11, bold=True)
     center_alignment = Alignment(horizontal='center', vertical='center')
@@ -275,31 +277,45 @@ def exportar_para_xlsx(df, parametros):
                          right=Side(style='thin'), 
                          top=Side(style='thin'), 
                          bottom=Side(style='thin'))
+    fill_cinza = PatternFill(fill_type='solid', fgColor='D9D9D9')
 
     # --- Cabeçalho Complexo --- 
-    # Linha 1: Título principal e Versão
-    sheet.merge_cells('A1:H1')
+    # Linha 1: Título principal
+    sheet.merge_cells('A1:J1')
     sheet['A1'] = 'PLANILHA DE MONITORAMENTO DE VAZÃO'
     sheet['A1'].font = title_font
     sheet['A1'].alignment = center_alignment
-    sheet['I1'] = 'Versão'
-    sheet['J1'] = '2020.01' # Ou buscar de algum lugar se for dinâmico
 
-    # Linha 2: Portaria
-    sheet.merge_cells('A2:H2')
+    # Linha 2: Portaria e versão
+    sheet.merge_cells('A2:B2')
+    sheet.merge_cells('C2:H2')
     sheet['A2'] = 'Portaria'
+    sheet['I2'] = 'Versão'
+    sheet['J2'] = '2020.01' # Ou buscar de algum lugar se for dinâmico
+    for col in ['A', 'B', 'C', 'D','E','F','G','H','I','J']:
+        cell = sheet[f'{col}2']
+        cell.border = thin_border
+
     # Adicionar valor da portaria se disponível nos parâmetros
     # sheet['I2'] = parametros.get('portaria', '') 
 
     # Linha 3: Tipo de Medidor
-    sheet.merge_cells('A3:H3')
+    sheet.merge_cells('C3:J3')
     sheet['A3'] = 'Tipo de Medidor'
+    for col in ['A', 'B', 'C', 'D','E','F','G','H','I','J']:
+        cell = sheet[f'{col}3']
+        cell.border = thin_border
+
     # Adicionar valor se disponível
     # sheet['I3'] = parametros.get('tipo_medidor', '')
 
     # Linha 4: Data de Instalação
-    sheet.merge_cells('A4:H4')
+    sheet.merge_cells('C4:J4')
     sheet['A4'] = 'Data de Instalação'
+    for col in ['A', 'B', 'C', 'D','E','F','G','H','I','J']:
+        cell = sheet[f'{col}4']
+        cell.border = thin_border
+
     # Adicionar valor se disponível
     # sheet['I4'] = parametros.get('data_instalacao', '')
 
@@ -308,17 +324,30 @@ def exportar_para_xlsx(df, parametros):
     sheet['A5'] = 'Leitura Equipamento'
     sheet['A5'].font = header_font
     sheet['A5'].alignment = center_alignment
+    for col in ['A', 'B', 'C', 'D']:
+        cell = sheet[f'{col}5']
+        cell.border = thin_border
+        cell.fill = fill_cinza
+
     sheet.merge_cells('E5:G5')
     sheet['E5'] = 'Resultados'
     sheet['E5'].font = header_font
     sheet['E5'].alignment = center_alignment
-    sheet.merge_cells('H5:I5')
+    for col in ['E', 'F', 'G']:
+        cell = sheet[f'{col}5']
+        cell.border = thin_border
+        cell.fill = fill_cinza
+
+
+    sheet.merge_cells('H5:J5')
     sheet['H5'] = 'Vazão Média - diária'
     sheet['H5'].font = header_font
     sheet['H5'].alignment = center_alignment
-    sheet['J5'] = 'Observação'
-    sheet['J5'].font = header_font
-    sheet['J5'].alignment = center_alignment
+    for col in ['H', 'I', 'J']:
+        cell = sheet[f'{col}5']
+        cell.border = thin_border
+        cell.fill = fill_cinza    
+    
 
     # Linha 6: Cabeçalhos das Colunas de Dados
     data_headers = ['Data', 'Hora', 'Horimetro', 'Medidor de Vazão', 
@@ -330,6 +359,7 @@ def exportar_para_xlsx(df, parametros):
         cell.font = header_font
         cell.alignment = center_alignment
         cell.border = thin_border
+        cell.fill = fill_cinza
 
     # --- Escrever Dados --- 
     start_row = 7
@@ -343,6 +373,12 @@ def exportar_para_xlsx(df, parametros):
         sheet.cell(row=r_idx, column=7).number_format = '0.000' # Volume acumulado
         sheet.cell(row=r_idx, column=8).number_format = '0.00'  # Valor (Vazão Média)
 
+        for c_idx in range(1, len(row) + 1):
+            cell = sheet.cell(row=r_idx, column=c_idx)
+            cell.border = thin_border
+
+
+
     # --- Ajustar Largura das Colunas --- 
     for col_idx, header in enumerate(data_headers, 1):
         column_letter = get_column_letter(col_idx)
@@ -354,7 +390,7 @@ def exportar_para_xlsx(df, parametros):
                  if isinstance(cell_value, (int, float)):
                       cell_str = f"{cell_value:.3f}" # Ajustar formato conforme a coluna
                  else:
-                      cell_str = str(cell_value)
+                      cell_str = str(cell_value)                      
                  max_length = max(max_length, len(cell_str) + 2)
         sheet.column_dimensions[column_letter].width = max_length
 
