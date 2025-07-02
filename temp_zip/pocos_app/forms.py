@@ -28,7 +28,7 @@ class ParametrosForm(forms.Form):
         ('dez', 'Dezembro'),
     ]
     
-    # Campos dinâmicos para cada mês
+    """# Campos dinâmicos para cada mês
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
@@ -43,8 +43,13 @@ class ParametrosForm(forms.Form):
                 min_value=0,
                 initial=0.40
             )
-           
-    
+            self.fields[f'dias_{codigo}'] = forms.IntegerField(
+                label=f'Dias ({nome})', 
+                min_value=0, 
+                max_value=31,
+                initial=30
+            )
+    """
     def clean(self):
         cleaned_data = super().clean()
         
