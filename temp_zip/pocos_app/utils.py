@@ -6,6 +6,7 @@ import calendar
 import io
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+from openpyxl.worksheet.properties import WorksheetProperties, PageSetupProperties
 from openpyxl.utils import get_column_letter
 
 def gerar_datas_aleatorias(ano_inicio, ano_fim, dias_por_mes):
@@ -267,7 +268,15 @@ def exportar_para_xlsx(df, parametros):
     sheet = workbook.active
     sheet.title = 'Planilha1'
 
+    sheet.sheet_properties = WorksheetProperties(
+        pageSetUpPr=PageSetupProperties(fitToPage=True)
+    )
+
+
     # --- Estilos --- (Opcional, mas melhora a aparência)
+    sheet.page_setup.orientation = sheet.ORIENTATION_LANDSCAPE
+    sheet.page_setup.fitToWidth = 1
+    sheet.page_setup.fitToHeight = 0 
     sheet.freeze_panes = 'A7'
     sheet.sheet_view.showGridLines = False
     header_font = Font(name='Calibri', size=11, bold=True)
