@@ -33,10 +33,10 @@ def gerar_datas_aleatorias(ano_inicio, ano_fim, dias_por_mes):
         # Para cada mês
         for codigo_mes, num_mes in meses_map.items():
             # Pular se não houver dias para este mês
-            dias_a_selecionar_param = dias_por_mes.get(f'dias_{codigo_mes}', 0)
+            """dias_a_selecionar_param = dias_por_mes.get(f'dias_{codigo_mes}', 0)
             if not isinstance(dias_a_selecionar_param, (int, float)) or dias_a_selecionar_param <= 0:
                 continue
-            dias_a_selecionar_param = int(dias_a_selecionar_param)
+            dias_a_selecionar_param = int(dias_a_selecionar_param)"""
                 
             # Obter o número de dias no mês
             try:
@@ -45,7 +45,8 @@ def gerar_datas_aleatorias(ano_inicio, ano_fim, dias_por_mes):
                 continue # Mês inválido
             
             # Número de dias a selecionar para este mês
-            dias_a_selecionar = min(dias_a_selecionar_param, dias_no_mes)
+            #dias_a_selecionar = min(dias_a_selecionar_param, dias_no_mes)
+            dias_a_selecionar = dias_no_mes
             if dias_a_selecionar <= 0:
                 continue
             
