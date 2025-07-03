@@ -39,7 +39,7 @@
                                 <label for="{{ form.horimetro_final.id_for_label }}">{{ form.horimetro_final.label }}</label>
                                 {{ form.horimetro_final.errors }}
                                 <input type="number" step="0.001" name="{{ form.horimetro_final.html_name }}" id="{{ form.horimetro_final.id_for_label }}" 
-                                       class="form-control" value="{{ form.horimetro_final.value|default:50 }}">
+                                       class="form-control" value="{{ form.horimetro_final.value|default:12000 }}">
                             </div>
                         </div>
                         
@@ -56,21 +56,21 @@
                                 <label for="{{ form.hidrometro_final.id_for_label }}">{{ form.hidrometro_final.label }}</label>
                                 {{ form.hidrometro_final.errors }}
                                 <input type="number" step="0.001" name="{{ form.hidrometro_final.html_name }}" id="{{ form.hidrometro_final.id_for_label }}" 
-                                       class="form-control" value="{{ form.hidrometro_final.value|default:50 }}">
+                                       class="form-control" value="{{ form.hidrometro_final.value|default:85000 }}">
                             </div>
                             
                             <div class="form-group">
                                 <label for="{{ form.max_horimetro_diario.id_for_label }}">{{ form.max_horimetro_diario.label }}</label>
                                 {{ form.max_horimetro_diario.errors }}
                                 <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" 
-                                       class="form-control" value="{{ form.max_horimetro_diario.value|default:0.5 }}">
+                                       class="form-control" value="{{ form.max_horimetro_diario.value|default:17 }}">
                             </div>
                             
                             <div class="form-group">
                                 <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
                                 {{ form.max_hidrometro_diario.errors }}
                                 <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" 
-                                       class="form-control" value="{{ form.max_hidrometro_diario.value|default:0.5 }}">
+                                       class="form-control" value="{{ form.max_hidrometro_diario.value|default:85 }}">
                             </div>
                         </div>
                     </div>
