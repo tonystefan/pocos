@@ -15,7 +15,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '*',
-    '192.168.0.6'
+    '192.168.0.6',
+    '.vercel.app',
+    '.now.sh',
 ]
 
 # Adicionando os domínios temporários corretos para testes
