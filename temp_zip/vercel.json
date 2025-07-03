@@ -19,10 +19,6 @@
     ],
     "routes": [
       {
-        "src": "/staticfiles/(.*)",
-        "dest": "/staticfiles/$1"
-      },
-      {
         "src": "/(.*)",
         "dest": "pocos_project/wsgi.py"
       }
