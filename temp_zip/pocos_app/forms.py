@@ -12,6 +12,14 @@ class ParametrosForm(forms.Form):
     max_horimetro_diario = forms.FloatField(label='Valor Máximo Diário do Horímetro', min_value=0.01)
     max_hidrometro_diario = forms.FloatField(label='Valor Máximo Diário do Hidrômetro', min_value=0.01)
     
+    # Opção para limitar até a data atual
+    limitar_data_atual = forms.BooleanField(
+        label='Limitar simulação até a data atual',
+        #help_text='Se marcado, a simulação será limitada até o dia anterior à data atual',
+        required=False,
+        initial=True  # Vem marcado por padrão
+    )
+    
     # Valores mensais
     MESES = [
         ('jan', 'Janeiro'),
@@ -27,29 +35,15 @@ class ParametrosForm(forms.Form):
         ('nov', 'Novembro'),
         ('dez', 'Dezembro'),
     ]
+
+    meses_selecionados = forms.MultipleChoiceField(
+        label='Meses para Projeção',
+        choices=MESES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        initial=[m[0] for m in MESES] # Todos os meses selecionados por padrão
+    )
     
-    """# Campos dinâmicos para cada mês
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        for codigo, nome in self.MESES:
-            self.fields[f'vazao_{codigo}'] = forms.FloatField(
-                label=f'Vazão m³/h ({nome})', 
-                min_value=0,
-                initial=0.03
-            )
-            self.fields[f'horas_{codigo}'] = forms.FloatField(
-                label=f'Horas/Dia ({nome})', 
-                min_value=0,
-                initial=0.40
-            )
-            self.fields[f'dias_{codigo}'] = forms.IntegerField(
-                label=f'Dias ({nome})', 
-                min_value=0, 
-                max_value=31,
-                initial=30
-            )
-    """
     def clean(self):
         cleaned_data = super().clean()
         
@@ -72,3 +66,4 @@ class ParametrosForm(forms.Form):
             raise forms.ValidationError('O hidrômetro final deve ser maior que o inicial.')
         
         return cleaned_data
+

@@ -25,6 +25,7 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://8005-i21qvwtzvqaiqq36wwc5f-c48c911b.manus.computer', # Mantendo o anterior por segurança
     'https://8006-i21qvwtzvqaiqq36wwc5f-c48c911b.manus.computer', # Adicionado para porta 8006
+    'https://8000-ilwhc5iuhe5vk2gey9m8c-e1bb5603.manusvm.computer', # Adicionado para porta 8000
     # Adicione outros domínios confiáveis aqui, se necessário
 ]
 

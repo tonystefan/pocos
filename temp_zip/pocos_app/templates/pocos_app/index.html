@@ -11,71 +11,109 @@
                 <form method="post" action="{% url 'gerar_tabela' %}">
                     {% csrf_token %}
                     
+                    <!-- Parâmetros Gerais -->
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <h4>Parâmetros Gerais</h4>
+
                             <div class="form-group">
                                 <label for="{{ form.ano_inicio.id_for_label }}">{{ form.ano_inicio.label }}</label>
                                 {{ form.ano_inicio.errors }}
-                                <input type="number" name="{{ form.ano_inicio.html_name }}" id="{{ form.ano_inicio.id_for_label }}" 
-                                       class="form-control" value="{{ form.ano_inicio.value|default:2023 }}">
+                                <input type="number" name="{{ form.ano_inicio.html_name }}" id="{{ form.ano_inicio.id_for_label }}" class="form-control" value="{{ form.ano_inicio.value|default:2023 }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="{{ form.ano_fim.id_for_label }}">{{ form.ano_fim.label }}</label>
                                 {{ form.ano_fim.errors }}
-                                <input type="number" name="{{ form.ano_fim.html_name }}" id="{{ form.ano_fim.id_for_label }}" 
-                                       class="form-control" value="{{ form.ano_fim.value|default:2024 }}">
+                                <input type="number" name="{{ form.ano_fim.html_name }}" id="{{ form.ano_fim.id_for_label }}" class="form-control" value="{{ form.ano_fim.value|default:2025 }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="{{ form.horimetro_inicial.id_for_label }}">{{ form.horimetro_inicial.label }}</label>
                                 {{ form.horimetro_inicial.errors }}
-                                <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" 
-                                       class="form-control" value="{{ form.horimetro_inicial.value|default:0 }}">
+                                <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" class="form-control" value="{{ form.horimetro_inicial.value|default:0 }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="{{ form.horimetro_final.id_for_label }}">{{ form.horimetro_final.label }}</label>
                                 {{ form.horimetro_final.errors }}
-                                <input type="number" step="0.001" name="{{ form.horimetro_final.html_name }}" id="{{ form.horimetro_final.id_for_label }}" 
-                                       class="form-control" value="{{ form.horimetro_final.value|default:12000 }}">
+                                <input type="number" step="0.001" name="{{ form.horimetro_final.html_name }}" id="{{ form.horimetro_final.id_for_label }}" class="form-control" value="{{ form.horimetro_final.value|default:12000 }}">
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <h4>&nbsp;</h4>
+
                             <div class="form-group">
                                 <label for="{{ form.hidrometro_inicial.id_for_label }}">{{ form.hidrometro_inicial.label }}</label>
                                 {{ form.hidrometro_inicial.errors }}
-                                <input type="number" step="0.001" name="{{ form.hidrometro_inicial.html_name }}" id="{{ form.hidrometro_inicial.id_for_label }}" 
-                                       class="form-control" value="{{ form.hidrometro_inicial.value|default:0 }}">
+                                <input type="number" step="0.001" name="{{ form.hidrometro_inicial.html_name }}" id="{{ form.hidrometro_inicial.id_for_label }}" class="form-control" value="{{ form.hidrometro_inicial.value|default:0 }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="{{ form.hidrometro_final.id_for_label }}">{{ form.hidrometro_final.label }}</label>
                                 {{ form.hidrometro_final.errors }}
-                                <input type="number" step="0.001" name="{{ form.hidrometro_final.html_name }}" id="{{ form.hidrometro_final.id_for_label }}" 
-                                       class="form-control" value="{{ form.hidrometro_final.value|default:85000 }}">
+                                <input type="number" step="0.001" name="{{ form.hidrometro_final.html_name }}" id="{{ form.hidrometro_final.id_for_label }}" class="form-control" value="{{ form.hidrometro_final.value|default:85000 }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="{{ form.max_horimetro_diario.id_for_label }}">{{ form.max_horimetro_diario.label }}</label>
                                 {{ form.max_horimetro_diario.errors }}
-                                <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" 
-                                       class="form-control" value="{{ form.max_horimetro_diario.value|default:17 }}">
+                                <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" class="form-control" value="{{ form.max_horimetro_diario.value|default:17 }}">
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
                                 {{ form.max_hidrometro_diario.errors }}
-                                <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" 
-                                       class="form-control" value="{{ form.max_hidrometro_diario.value|default:85 }}">
+                                <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" class="form-control" value="{{ form.max_hidrometro_diario.value|default:85 }}">
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+                    <!-- Seção de Seleção de Meses -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h4>Meses para Projeção de Consumo</h4>
+
+                            <div class="form-group">
+                                {{ form.meses_selecionados.errors }}
+
+                                <div class="row mb-3 align-items-center">
+                                    <div class="col-md-auto">
+                                        <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="selecionarTodosMeses()">Selecionar Todos</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="desselecionarTodosMeses()">Desmarcar Todos</button>
+                                    </div>
+
+                                    <div class="col-md-auto">
+                                        <div class="form-check mt-1">
+                                            <input type="checkbox" name="{{ form.limitar_data_atual.html_name }}" id="{{ form.limitar_data_atual.id_for_label }}" class="form-check-input" {% if form.limitar_data_atual.value %}checked{% endif %}>
+                                            <label class="form-check-label" for="{{ form.limitar_data_atual.id_for_label }}">
+                                                {{ form.limitar_data_atual.label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    {% for choice in form.meses_selecionados %}
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="form-check">
+                                                {{ choice.tag }}
+                                                <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                                    {{ choice.choice_label }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="form-text text-muted mt-2">
+                                    {{ form.limitar_data_atual.help_text }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary btn-lg">Gerar Tabela</button>
                     </div>
@@ -84,4 +122,31 @@
         </div>
     </div>
 </div>
+<script>
+// Script para marcar/desmarcar todos os meses
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar botões para selecionar/desselecionar todos
+    const mesesContainer = document.querySelector();
+    if (mesesContainer) {
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.className = 'col-md-12 mb-3';
+        buttonsDiv.innerHTML = `
+            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="selecionarTodosMeses()">Selecionar Todos</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="desselecionarTodosMeses()">Desmarcar Todos</button>
+        `;
+        mesesContainer.parentNode.insertBefore(buttonsDiv, mesesContainer);
+    }
+});
+
+function selecionarTodosMeses() {
+    const checkboxes = document.querySelectorAll('input[name="meses_selecionados"]');
+    checkboxes.forEach(checkbox => checkbox.checked = true);
+}
+
+function desselecionarTodosMeses() {
+    const checkboxes = document.querySelectorAll('input[name="meses_selecionados"]');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+}
+</script>
 {% endblock %}
+
