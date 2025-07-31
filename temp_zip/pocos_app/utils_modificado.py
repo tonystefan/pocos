@@ -390,25 +390,22 @@ def exportar_para_xlsx(df, parametros):
             cell = sheet.cell(row=r_idx, column=c_idx)
             cell.border = thin_border
 
+    # --- Ajustar Largura das Colunas ---
+    for column in sheet.columns:
+        max_length = 0
+        column_letter = get_column_letter(column[0].column)
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = min(max_length + 2, 50)  # Limitar a largura máxima
+        sheet.column_dimensions[column_letter].width = adjusted_width
 
-
-    # --- Ajustar Largura das Colunas --- 
-    for col_idx, header in enumerate(data_headers, 1):
-        column_letter = get_column_letter(col_idx)
-        max_length = len(header) + 2 # Padding
-        for row_idx in range(start_row, sheet.max_row + 1):
-            cell_value = sheet.cell(row=row_idx, column=col_idx).value
-            if cell_value is not None:
-                 # Considerar formatação de número ao calcular largura
-                 if isinstance(cell_value, (int, float)):
-                      cell_str = f"{cell_value:.3f}" # Ajustar formato conforme a coluna
-                 else:
-                      cell_str = str(cell_value)                      
-                 max_length = max(max_length, len(cell_str) + 2)
-        sheet.column_dimensions[column_letter].width = max_length
-
-    # Salvar o arquivo em memória
+    # Salvar o workbook no buffer
     workbook.save(output)
     output.seek(0)
+    
     return output.getvalue()
 

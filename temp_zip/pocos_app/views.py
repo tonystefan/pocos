@@ -21,7 +21,14 @@ def gerar_tabela(request):
         if form.is_valid():
             # Armazenar os dados do formulário na sessão
             # Certificar que os dados são serializáveis para JSON (necessário para sessão)
-            parametros_cleaned = form.cleaned_data
+            parametros_cleaned = form.cleaned_data.copy()
+            
+            # Converter objetos date para strings para serialização JSON
+            if 'data_inicio' in parametros_cleaned and parametros_cleaned['data_inicio']:
+                parametros_cleaned['data_inicio'] = parametros_cleaned['data_inicio'].isoformat()
+            if 'data_fim' in parametros_cleaned and parametros_cleaned['data_fim']:
+                parametros_cleaned['data_fim'] = parametros_cleaned['data_fim'].isoformat()
+            
             request.session['parametros'] = parametros_cleaned
             print("--- Parâmetros salvos na sessão (gerar_tabela) ---")
             # Use json.dumps for better readability if needed, but ensure data types are session-compatible
@@ -29,8 +36,8 @@ def gerar_tabela(request):
             print(parametros_cleaned)
             print("--------------------------------------------------")
             
-            # Gerar a tabela de dados
-            df = gerar_tabela_dados(parametros_cleaned)
+            # Gerar a tabela de dados (usando os dados originais com objetos date)
+            df = gerar_tabela_dados(form.cleaned_data)
             
             # Armazenar a tabela na sessão (convertendo para dicionário)
             request.session['tabela'] = df.to_dict('records')
@@ -59,7 +66,14 @@ def exportar_xlsx(request):
     
     # Recuperar a tabela e os parâmetros da sessão
     tabela_dict = request.session.get('tabela', [])
-    parametros = request.session.get('parametros', {})
+    parametros = request.session.get('parametros', {}).copy()
+    
+    # Converter strings de data de volta para objetos date
+    from datetime import datetime
+    if 'data_inicio' in parametros and isinstance(parametros['data_inicio'], str):
+        parametros['data_inicio'] = datetime.fromisoformat(parametros['data_inicio']).date()
+    if 'data_fim' in parametros and isinstance(parametros['data_fim'], str):
+        parametros['data_fim'] = datetime.fromisoformat(parametros['data_fim']).date()
     
     print("--- Parâmetros recuperados da sessão (exportar_xlsx) ---")
     # print(json.dumps(parametros, indent=2, default=str))
