@@ -22,9 +22,17 @@
                     </a>
                 </div>
                 
-                <div class="table-responsive">
-                    {{ tabela|safe }}
-                </div>
+	<div class="table-responsive">
+	                    {{ tabela|safe }}
+	                </div>
+	                
+	                <style>
+	                    /* Força o alinhamento centralizado do cabeçalho da tabela gerada pelo pandas */
+	                    .table thead th {
+	                        text-align: center;
+	                        vertical-align: middle;
+	                    }
+	                </style>
             </div>
         </div>
     </div>

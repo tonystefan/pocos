@@ -45,6 +45,18 @@ class ParametrosForm(forms.Form):
         initial=[m[0] for m in MESES] # Todos os meses selecionados por padrão
     )
     
+    registrar_sabados = forms.BooleanField(
+        label='Registrar Sábados',
+        required=False,
+        initial=True # Manter selecionado por padrão
+    )
+    
+    registrar_domingos = forms.BooleanField(
+        label='Registrar Domingos',
+        required=False,
+        initial=True # Manter selecionado por padrão
+    )
+    
     def clean(self):
         cleaned_data = super().clean()
         
@@ -66,5 +78,68 @@ class ParametrosForm(forms.Form):
         if hidrometro_inicial and hidrometro_final and hidrometro_final <= hidrometro_inicial:
             raise forms.ValidationError('O hidrômetro final deve ser maior que o inicial.')
         
+        # --- Validação de Consistência da Projeção ---
+        max_hidrometro_diario = cleaned_data.get('max_hidrometro_diario')
+        max_horimetro_diario = cleaned_data.get('max_horimetro_diario')
+        
+        # 1. Validar a Vazão Máxima
+        if max_horimetro_diario and max_horimetro_diario > 0:
+            vazao_maxima = max_hidrometro_diario / max_horimetro_diario
+            
+            # 2. Validar a Consistência da Projeção Total
+            data_inicio = cleaned_data.get('data_inicio')
+            data_fim = cleaned_data.get('data_fim')
+            meses_selecionados = cleaned_data.get('meses_selecionados', [])
+            registrar_sabados = cleaned_data.get('registrar_sabados', True)
+            registrar_domingos = cleaned_data.get('registrar_domingos', True)
+            
+            if data_inicio and data_fim:
+                from datetime import timedelta
+                
+                # Simular a contagem de dias úteis (dias com consumo)
+                dias_consumo = 0
+                data_atual = data_inicio
+                while data_atual <= data_fim:
+                    mes_codigo = data_atual.strftime("%b").lower()[:3] # Ex: "jun"
+                    
+                    if mes_codigo in meses_selecionados:
+                        is_sabado = data_atual.weekday() == 5
+                        is_domingo = data_atual.weekday() == 6
+                        
+                        deve_consumir = True
+                        if is_sabado and not registrar_sabados:
+                            deve_consumir = False
+                        if is_domingo and not registrar_domingos:
+                            deve_consumir = False
+                            
+                        if deve_consumir:
+                            dias_consumo += 1
+                            
+                    data_atual += timedelta(days=1)
+                
+                if dias_consumo == 0:
+                    raise forms.ValidationError('Não há dias selecionados para projeção no período. Verifique as datas e os meses/dias da semana selecionados.')
+                
+                diferenca_hidrometro = hidrometro_final - hidrometro_inicial
+                diferenca_horimetro = horimetro_final - horimetro_inicial
+                
+                # --- Novas Validações de Consumo e Tempo Médio Diário ---
+                
+                # 1. Consumo Médio Diário
+                consumo_medio = diferenca_hidrometro / dias_consumo
+                if consumo_medio > max_hidrometro_diario:
+                    raise forms.ValidationError(f'O consumo médio diário necessário ({consumo_medio:.3f} m³) excede o Valor Máximo Diário do Hidrômetro ({max_hidrometro_diario:.3f} m³). Ajuste os parâmetros.')
+                
+                # 2. Tempo Médio Diário
+                tempo_medio = diferenca_horimetro / dias_consumo
+                if tempo_medio > max_horimetro_diario:
+                    raise forms.ValidationError(f'O tempo médio diário necessário ({tempo_medio:.3f} h) excede o Valor Máximo Diário do Horímetro ({max_horimetro_diario:.3f} h). Ajuste os parâmetros.')
+                
+                # 3. Validação de Vazão Média Total (Mantida para consistência)
+                vazao_media_total = diferenca_hidrometro / diferenca_horimetro if diferenca_horimetro > 0 else float('inf')
+                
+                if vazao_media_total > vazao_maxima:
+                    raise forms.ValidationError(f'A vazão média total necessária ({vazao_media_total:.2f} m³/h) excede a vazão máxima diária permitida ({vazao_maxima:.2f} m³/h). Ajuste os parâmetros.')
+                
         return cleaned_data
 

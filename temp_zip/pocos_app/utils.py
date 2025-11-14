@@ -150,41 +150,150 @@ def gerar_tabela_dados(parametros):
     max_horimetro_diario = parametros["max_horimetro_diario"]
     max_hidrometro_diario = parametros["max_hidrometro_diario"]
     meses_selecionados = parametros.get("meses_selecionados", []) # Obter meses selecionados
+    registrar_sabados = parametros.get("registrar_sabados", True)
+    registrar_domingos = parametros.get("registrar_domingos", True)
 
     # Gerar todas as datas do período com informação se o mês está selecionado
     datas_info = gerar_datas_periodo(data_inicio, data_fim, meses_selecionados)
     if not datas_info:
         return pd.DataFrame() # Retorna DataFrame vazio se não houver datas
     
+    # Filtrar datas que realmente terão consumo (meses selecionados E dias da semana selecionados)
+    datas_para_consumo = []
+    for data_dt, mes_selecionado in datas_info:
+        # data_dt.weekday() retorna 0 (segunda) a 6 (domingo)
+        is_sabado = data_dt.weekday() == 5
+        is_domingo = data_dt.weekday() == 6
+        
+        deve_registrar = mes_selecionado
+        
+        if is_sabado and not registrar_sabados:
+            deve_registrar = False
+        
+        if is_domingo and not registrar_domingos:
+            deve_registrar = False
+            
+        if deve_registrar:
+            datas_para_consumo.append((data_dt, mes_selecionado))
+            
+    num_datas_para_consumo = len(datas_para_consumo)
+    
     # Separar datas selecionadas para distribuição de valores
-    datas_selecionadas = [info for info in datas_info if info[1]]  # Apenas meses selecionados
-    num_datas_selecionadas = len(datas_selecionadas)
+    # A lista datas_info agora contém todas as datas, mas a distribuição será feita apenas para as datas em datas_para_consumo
+    
+    # Calcular diferenças totais
     
     # Calcular diferenças totais
     diferenca_horimetro = horimetro_final - horimetro_inicial
     diferenca_hidrometro = hidrometro_final - hidrometro_inicial
     
-    # Distribuir valores diários apenas para os dias dos meses selecionados
-    if num_datas_selecionadas > 0:
-        valores_horimetro_selecionados = distribuir_valores(diferenca_horimetro, num_datas_selecionadas, max_horimetro_diario)
-        valores_hidrometro_selecionados = distribuir_valores(diferenca_hidrometro, num_datas_selecionadas, max_hidrometro_diario)
+    # Distribuir valores diários apenas para os dias selecionados (meses E dias da semana)
+    if num_datas_para_consumo > 0:
+        # 1. Distribuir o Tempo de Captação (Horímetro)
+        valores_horimetro_consumo = distribuir_valores(diferenca_horimetro, num_datas_para_consumo, max_horimetro_diario)
+        
+        # 2. Distribuir o Volume (Hidrômetro) com restrição de Vazão Máxima
+        valores_hidrometro_consumo = distribuir_valores(diferenca_hidrometro, num_datas_para_consumo, max_hidrometro_diario)
+        
+        # 3. Aplicar a restrição de Vazão Máxima Diária (Ajuste Pós-Distribuição)
+        vazao_maxima = max_hidrometro_diario / max_horimetro_diario if max_horimetro_diario > 0 else float('inf')
+        
+        # O volume diário não pode exceder o tempo diário * vazao_maxima
+        excesso_volume = 0
+        for i in range(num_datas_para_consumo):
+            limite_vazao_volume = valores_horimetro_consumo[i] * vazao_maxima
+            
+            if valores_hidrometro_consumo[i] > limite_vazao_volume:
+                excesso_volume += valores_hidrometro_consumo[i] - limite_vazao_volume
+                valores_hidrometro_consumo[i] = limite_vazao_volume
+                
+        # Redistribuir o excesso de volume (se houver)
+        if excesso_volume > 1e-6:
+            # Redistribuir o excesso entre os dias que ainda não atingiram o limite de vazão
+            indices_abaixo_limite = []
+            for i in range(num_datas_para_consumo):
+                limite_vazao_volume = valores_horimetro_consumo[i] * vazao_maxima
+                if valores_hidrometro_consumo[i] < limite_vazao_volume:
+                    indices_abaixo_limite.append(i)
+                    
+            if indices_abaixo_limite:
+                adicao_por_indice = excesso_volume / len(indices_abaixo_limite)
+                for i in indices_abaixo_limite:
+                    valores_hidrometro_consumo[i] += adicao_por_indice
+                    
+        # Ajuste final para garantir a soma exata (arredondamento)
+        soma_atual = sum(valores_hidrometro_consumo)
+        diferenca = diferenca_hidrometro - soma_atual
+        if abs(diferenca) > 1e-6:
+            # Adicionar a diferença a um valor qualquer (o primeiro que não exceda o limite)
+            for i in range(num_datas_para_consumo):
+                limite_vazao_volume = valores_horimetro_consumo[i] * vazao_maxima
+                if valores_hidrometro_consumo[i] + diferenca <= limite_vazao_volume:
+                    valores_hidrometro_consumo[i] += diferenca
+                    break
+                    
+        # Arredondar os valores
+        # O arredondamento pode causar pequenas violações no limite de vazão.
+        # Vamos arredondar o horímetro primeiro.
+        valores_horimetro_consumo = [round(v, 3) for v in valores_horimetro_consumo]
+        
+        # Em seguida, arredondar o hidrômetro, garantindo que o limite de vazão seja mantido.
+        valores_hidrometro_consumo_arredondado = []
+        for i in range(num_datas_para_consumo):
+            volume_arredondado = round(valores_hidrometro_consumo[i], 3)
+            
+            # Recalcular o limite de vazão com o tempo arredondado
+            limite_vazao_volume_arredondado = valores_horimetro_consumo[i] * vazao_maxima
+            
+            # Garantir que o volume arredondado não exceda o limite de vazão
+            volume_final = min(volume_arredondado, round(limite_vazao_volume_arredondado, 3))
+            
+            valores_hidrometro_consumo_arredondado.append(volume_final)
+            
+        valores_hidrometro_consumo = valores_hidrometro_consumo_arredondado
+        
+        # Ajuste final de soma após o arredondamento (se necessário)
+        soma_atual_final = sum(valores_hidrometro_consumo)
+        diferenca_final = diferenca_hidrometro - soma_atual_final
+        
+        if abs(diferenca_final) > 1e-6:
+            # Adicionar a diferença a um valor qualquer (o primeiro que não exceda o limite)
+            for i in range(num_datas_para_consumo):
+                limite_vazao_volume = valores_horimetro_consumo[i] * vazao_maxima
+                if valores_hidrometro_consumo[i] + diferenca_final <= limite_vazao_volume:
+                    valores_hidrometro_consumo[i] += diferenca_final
+                    valores_hidrometro_consumo[i] = round(valores_hidrometro_consumo[i], 3) # Arredondar novamente
+                    break
+        
     else:
-        valores_horimetro_selecionados = []
-        valores_hidrometro_selecionados = []
+        valores_horimetro_consumo = []
+        valores_hidrometro_consumo = []
     
-    # Criar listas de valores para todas as datas
+    # Criar listas de valores para todas as datas, aplicando zero para dias não selecionados
     valores_horimetro_diario = []
     valores_hidrometro_diario = []
-    idx_selecionado = 0
+    idx_consumo = 0
     
     for data_dt, mes_selecionado in datas_info:
-        if mes_selecionado and idx_selecionado < len(valores_horimetro_selecionados):
-            # Mês selecionado: usar valores distribuídos
-            valores_horimetro_diario.append(valores_horimetro_selecionados[idx_selecionado])
-            valores_hidrometro_diario.append(valores_hidrometro_selecionados[idx_selecionado])
-            idx_selecionado += 1
+        # data_dt.weekday() retorna 0 (segunda) a 6 (domingo)
+        is_sabado = data_dt.weekday() == 5
+        is_domingo = data_dt.weekday() == 6
+        
+        deve_consumir = mes_selecionado
+        
+        if is_sabado and not registrar_sabados:
+            deve_consumir = False
+        
+        if is_domingo and not registrar_domingos:
+            deve_consumir = False
+            
+        if deve_consumir and idx_consumo < len(valores_horimetro_consumo):
+            # Dia de consumo: usar valores distribuídos
+            valores_horimetro_diario.append(valores_horimetro_consumo[idx_consumo])
+            valores_hidrometro_diario.append(valores_hidrometro_consumo[idx_consumo])
+            idx_consumo += 1
         else:
-            # Mês não selecionado: valores zero
+            # Dia sem consumo: valores zero
             valores_horimetro_diario.append(0.0)
             valores_hidrometro_diario.append(0.0)
     
@@ -230,7 +339,8 @@ def gerar_tabela_dados(parametros):
 
         # Calcular vazão (evitar divisão por zero)
         if tempo_diario != 0:
-            vazoes.append(round((volume_diario / tempo_diario), 2))
+            vazao_calculada = volume_diario / tempo_diario
+            vazoes.append(round(vazao_calculada, 2))
         else:
             vazoes.append(0.0)
 

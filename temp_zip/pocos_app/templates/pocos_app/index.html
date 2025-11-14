@@ -11,8 +11,16 @@
                 <form method="post" action="{% url 'gerar_tabela' %}">
                     {% csrf_token %}
                     
-                    <!-- Parâmetros Gerais -->
-                    <div class="row mb-4">
+	                    {% if form.non_field_errors %}
+	                        <div class="alert alert-danger">
+	                            {% for error in form.non_field_errors %}
+	                                <p>{{ error }}</p>
+	                            {% endfor %}
+	                        </div>
+	                    {% endif %}
+	                    
+	                    <!-- Parâmetros Gerais -->
+	                    <div class="row mb-4">
                         <div class="col-md-6">
                             <h4>Parâmetros Gerais</h4>
 
@@ -33,7 +41,7 @@
                             <div class="form-group">
                                 <label for="{{ form.horimetro_inicial.id_for_label }}">{{ form.horimetro_inicial.label }}</label>
                                 {{ form.horimetro_inicial.errors }}
-                                <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" class="form-control" value="{{ form.horimetro_inicial.value|default:86400 }}">
+                                <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" class="form-control" value="{{ form.horimetro_inicial.value|default:8640 }}">
                             </div>
 
                             <div class="form-group">
@@ -100,12 +108,43 @@
                                     {% endfor %}
                                 </div>
 
-                                <div class="form-text text-muted mt-2">
-                                    Selecione os meses em que haverá projeção de consumo. Os registros começarão a partir da data de início especificada, mas os valores de consumo só serão aplicados nos meses selecionados.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+	                            <div class="form-text text-muted mt-2">
+	                                    Selecione os meses em que haverá projeção de consumo. Os registros começarão a partir da data de início especificada, mas os valores de consumo só serão aplicados nos meses selecionados.
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	
+	                    <!-- Seção de Seleção de Dias da Semana -->
+	                    <div class="row mb-4">
+	                        <div class="col-md-12">
+	                            <h4>Dias da Semana para Projeção de Consumo</h4>
+	
+	                            <div class="form-group">
+	                                <div class="row">
+	                                    <div class="col-md-3 col-sm-6">
+	                                        <div class="form-check">
+	                                            {{ form.registrar_sabados }}
+	                                            <label class="form-check-label" for="{{ form.registrar_sabados.id_for_label }}">
+	                                                {{ form.registrar_sabados.label }}
+	                                            </label>
+	                                        </div>
+	                                    </div>
+	                                    <div class="col-md-3 col-sm-6">
+	                                        <div class="form-check">
+	                                            {{ form.registrar_domingos }}
+	                                            <label class="form-check-label" for="{{ form.registrar_domingos.id_for_label }}">
+	                                                {{ form.registrar_domingos.label }}
+	                                            </label>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                                <div class="form-text text-muted mt-2">
+	                                    Desmarque para zerar o consumo nos dias selecionados.
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
 
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-primary btn-lg">Gerar Tabela</button>
