@@ -70,19 +70,51 @@
                                 <label for="{{ form.max_horimetro_diario.id_for_label }}">{{ form.max_horimetro_diario.label }}</label>
                                 {{ form.max_horimetro_diario.errors }}
                                 <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" class="form-control" value="{{ form.max_horimetro_diario.value|default:8 }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
-                                {{ form.max_hidrometro_diario.errors }}
-                                <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" class="form-control" value="{{ form.max_hidrometro_diario.value|default:32 }}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Seção de Seleção de Meses -->
-                    <div class="row mb-4">
-                        <div class="col-md-12">
+                            <	                            <div class="form-group">
+	                                <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
+	                                {{ form.max_hidrometro_diario.errors }}
+	                                <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" class="form-control" value="{{ form.max_hidrometro_diario.value|default:32 }}">
+	                                <div class="form-text text-muted">{{ form.max_hidrometro_diario.help_text }}</div>
+	                            </div>
+	                        </div>
+	                    </div>
+	
+	                    <!-- Parâmetros de Níveis de Água -->
+	                    <div class="row mb-4">
+	                        <div class="col-md-6">
+	                            <h4>Níveis de Água</h4>
+	
+	                            <div class="form-group">
+	                                <label for="{{ form.ne.id_for_label }}">{{ form.ne.label }}</label>
+	                                {{ form.ne.errors }}
+	                                <input type="number" step="0.01" name="{{ form.ne.html_name }}" id="{{ form.ne.id_for_label }}" class="form-control" value="{{ form.ne.value|default:10.0 }}">
+	                            </div>
+	
+	                            <div class="form-group">
+	                                <label for="{{ form.nd.id_for_label }}">{{ form.nd.label }}</label>
+	                                {{ form.nd.errors }}
+	                                <input type="number" step="0.01" name="{{ form.nd.html_name }}" id="{{ form.nd.id_for_label }}" class="form-control" value="{{ form.nd.value|default:15.0 }}">
+	                            </div>
+	                        </div>
+	
+	                        <div class="col-md-6">
+	                            <h4>Periodicidade de Apresentação</h4>
+	                            <div class="form-group">
+	                                <label>{{ form.apresentar_niveis.label }}</label>
+	                                {{ form.apresentar_niveis.errors }}
+	                                <div class="form-check">
+	                                    {% for radio in form.apresentar_niveis %}
+	                                        <div class="form-check">
+	                                            {{ radio.tag }}
+	                                            <label class="form-check-label" for="{{ radio.id_for_label }}">
+	                                                {{ radio.choice_label }}
+	                                            </label>
+	                                        </div>
+	                                    {% endfor %}
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>        <div class="col-md-12">
                             <h4>Meses para Projeção de Consumo</h4>
 
                             <div class="form-group">
@@ -115,8 +147,8 @@
 	                        </div>
 	                    </div>
 	
-	                    <!-- Seção de Seleção de Dias da Semana -->
-	                    <div class="row mb-4">
+	                    <!-- Seção de Seleção de Meses -->
+	                    <div class="row mb-4">ow mb-4">
 	                        <div class="col-md-12">
 	                            <h4>Dias da Semana para Projeção de Consumo</h4>
 	

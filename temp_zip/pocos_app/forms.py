@@ -21,6 +21,24 @@ class ParametrosForm(forms.Form):
     max_horimetro_diario = forms.FloatField(label='Valor Máximo Diário do Horímetro', min_value=0.01)
     max_hidrometro_diario = forms.FloatField(label='Valor Máximo Diário do Hidrômetro', min_value=0.01)
     
+    # Novos campos para Níveis de Água
+    ne = forms.FloatField(label='Nível Estático (NE)', min_value=0, required=False)
+    nd = forms.FloatField(label='Nível Dinâmico (ND)', min_value=0, required=False)
+    
+    # Caixa de seleção para periodicidade dos Níveis
+    PERIODICIDADE_NIVEIS = [
+        ('mensal', 'Mensal (Último dia de cada mês)'),
+        ('abr_out', 'Abril/Outubro (Último dia de Abr e Out)'),
+    ]
+    
+    apresentar_niveis = forms.ChoiceField(
+        label='Apresentar Níveis',
+        choices=PERIODICIDADE_NIVEIS,
+        widget=forms.RadioSelect,
+        required=False,
+        initial='mensal'
+    )
+    
     # Valores mensais
     MESES = [
         ('jan', 'Janeiro'),

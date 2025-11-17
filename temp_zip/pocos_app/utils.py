@@ -152,6 +152,11 @@ def gerar_tabela_dados(parametros):
     meses_selecionados = parametros.get("meses_selecionados", []) # Obter meses selecionados
     registrar_sabados = parametros.get("registrar_sabados", True)
     registrar_domingos = parametros.get("registrar_domingos", True)
+    
+    # Novos parâmetros de Níveis de Água
+    ne_valor = parametros.get("ne")
+    nd_valor = parametros.get("nd")
+    apresentar_niveis = parametros.get("apresentar_niveis", 'mensal')
 
     # Gerar todas as datas do período com informação se o mês está selecionado
     datas_info = gerar_datas_periodo(data_inicio, data_fim, meses_selecionados)
@@ -322,6 +327,10 @@ def gerar_tabela_dados(parametros):
     vazoes = []
     hora_list = []
     
+    # Novas colunas para Níveis de Água
+    ne_list = []
+    nd_list = []
+    
     for i, (data_dt, mes_selecionado) in enumerate(datas_info):
         mes_num = data_dt.month
         mes_codigo = meses_map_rev.get(mes_num, "jan")
@@ -348,8 +357,28 @@ def gerar_tabela_dados(parametros):
         chave_mes_ano = data_dt.strftime("%Y-%m")
         volume_acumulado_mensal[chave_mes_ano] = volume_acumulado_mensal.get(chave_mes_ano, 0) + volume_diario
         volume_acum_mensal_list.append(round(volume_acumulado_mensal[chave_mes_ano], 3))
-
-    # Criar DataFrame com as colunas na ordem desejada pelo template
+        
+        # --- Lógica de Níveis de Água ---
+        ne_dia = None
+        nd_dia = None
+        
+        # Verificar se é o último dia do mês
+        ultimo_dia_do_mes = data_dt.day == calendar.monthrange(data_dt.year, data_dt.month)[1]
+        
+        if ne_valor is not None and nd_valor is not None:
+            if apresentar_niveis == 'mensal' and ultimo_dia_do_mes:
+                ne_dia = ne_valor
+                nd_dia = nd_valor
+            elif apresentar_niveis == 'abr_out':
+                # Meses de Abril (4) e Outubro (10)
+                if data_dt.month in [4, 10] and ultimo_dia_do_mes:
+                    ne_dia = ne_valor
+                    nd_dia = nd_valor
+        
+        ne_list.append(ne_dia)
+        nd_list.append(nd_dia)
+    
+        # Criar DataFrame com as colunas na ordem desejada pelo template
     df = pd.DataFrame({
         "Data": datas_str,
         "Hora": hora_list,
@@ -360,6 +389,8 @@ def gerar_tabela_dados(parametros):
         "Volume acumulado Mensal (m3)": volume_acum_mensal_list,
         "Valor": vazoes, # Mapeando Vazão m³/h para Valor (Vazão Média - diária)
         "Unidade": ["m³/h"] * num_datas, # Unidade para Vazão Média
+        "Nível Estático (NE)": ne_list, # Nova Coluna
+        "Nível Dinâmico (ND)": nd_list, # Nova Coluna
         "Observação": [""] * num_datas # Coluna "Observação" vazia
     })
     
@@ -404,18 +435,18 @@ def exportar_para_xlsx(df, parametros):
 
     # --- Cabeçalho Complexo --- 
     # Linha 1: Título principal
-    sheet.merge_cells("A1:J1")
+    sheet.merge_cells("A1:L1")
     sheet["A1"] = "PLANILHA DE MONITORAMENTO DE VAZÃO"
     sheet["A1"].font = title_font
     sheet["A1"].alignment = center_alignment
 
     # Linha 2: Portaria e versão
     sheet.merge_cells("A2:B2")
-    sheet.merge_cells("C2:H2")
+    sheet.merge_cells("C2:J2")
     sheet["A2"] = "Portaria"
-    sheet["I2"] = "Versão"
-    sheet["J2"] = "2020.01" # Ou buscar de algum lugar se for dinâmico
-    for col in ["A", "B", "C", "D","E","F","G","H","I","J"]:
+    sheet["K2"] = "Versão"
+    sheet["L2"] = "2025.01" # Ou buscar de algum lugar se for dinâmico
+    for col in ["A", "B", "C", "D","E","F","G","H","I","J","K","L"]:
         cell = sheet[f"{col}2"]
         cell.border = thin_border
 
@@ -423,9 +454,9 @@ def exportar_para_xlsx(df, parametros):
     # sheet["I2"] = parametros.get("portaria", "") 
 
     # Linha 3: Tipo de Medidor
-    sheet.merge_cells("C3:J3")
+    sheet.merge_cells("C3:L3")
     sheet["A3"] = "Tipo de Medidor"
-    for col in ["A", "B", "C", "D","E","F","G","H","I","J"]:
+    for col in ["A", "B", "C", "D","E","F","G","H","I","J","K","L"]:
         cell = sheet[f"{col}3"]
         cell.border = thin_border
 
@@ -433,9 +464,9 @@ def exportar_para_xlsx(df, parametros):
     # sheet["I3"] = parametros.get("tipo_medidor", "")
 
     # Linha 4: Data de Instalação
-    sheet.merge_cells("C4:J4")
+    sheet.merge_cells("C4:L4")
     sheet["A4"] = "Data de Instalação"
-    for col in ["A", "B", "C", "D","E","F","G","H","I","J"]:
+    for col in ["A", "B", "C", "D","E","F","G","H","I","J","K","L"]:
         cell = sheet[f"{col}4"]
         cell.border = thin_border
 
@@ -461,21 +492,32 @@ def exportar_para_xlsx(df, parametros):
         cell.border = thin_border
         cell.fill = fill_cinza
 
-
-    sheet.merge_cells("H5:J5")
-    sheet["H5"] = "Vazão Média - diária"
+    sheet.merge_cells("H5:I5")
+    sheet["H5"] = "Vazão Média"
     sheet["H5"].font = header_font
     sheet["H5"].alignment = center_alignment
-    for col in ["H", "I", "J"]:
+    for col in ["H", "J"]:
+        cell = sheet[f"{col}5"]
+        cell.border = thin_border
+        cell.fill = fill_cinza
+
+
+    sheet.merge_cells("J5:L5")
+    sheet["J5"] = "Níveis"
+    sheet["J5"].font = header_font
+    sheet["J5"].alignment = center_alignment
+    for col in ["J","K","L"]:
         cell = sheet[f"{col}5"]
         cell.border = thin_border
         cell.fill = fill_cinza    
     
 
     # Linha 6: Cabeçalhos das Colunas de Dados
-    data_headers = ["Data", "Hora", "Horimetro", "Medidor de Vazão", 
-                    "Tempo de Captação (h)", "Volume diário (m3)", 
-                    "Volume acumulado Mensal (m3)", "Valor", "Unidade", "Observação"]
+    data_headers = [
+        "Data", "Hora", "Horimetro", "Medidor de Vazão",
+        "Tempo de Captação (h)", "Volume diário (m3)", "Volume acumulado Mensal (m3)",
+        "Valor", "Unidade", "Estático(NE)", "Dinâmico(ND)", "Observação"
+    ]
     sheet.append(data_headers)
     for col_idx, header in enumerate(data_headers, 1):
         cell = sheet.cell(row=6, column=col_idx)
