@@ -1,73 +1,279 @@
-.month-section {
-    background-color: #f8f9fa;
-    padding: 1rem;
+/* Paleta de Cores Sóbrias/Pastéis */
+/* Fundo: Cinza Claro Suave */
+/* Primária (Ação): Azul Pastel */
+/* Secundária (Neutro): Cinza Médio */
+/* Destaque: Verde Menta Suave */
+
+:root {
+    --color-background: #f8f9fa; /* Cinza Claro Suave */
+    --color-primary: #89b4f8; /* Azul Pastel */
+    --color-primary-dark: #669df6;
+    --color-secondary: #adb5bd; /* Cinza Médio */
+    --color-text: #343a40; /* Cinza Escuro para Texto */
+    --color-card-bg: #ffffff;
+    --color-success: #a7f0ba; /* Verde Menta Suave */
+    --color-success-dark: #6aa84f;
+}
+
+/* Reset e configurações globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--color-background);
+    min-height: 100vh;
+    color: var(--color-text);
+    padding-top: 2rem; /* Adicionado padding para o conteúdo das páginas internas */
+    padding-bottom: 2rem;
+}
+
+/* Menu Principal - Design Minimalista (Ajustado para a nova paleta) */
+.menu-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Gradiente Pastel */
+}
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.menu-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.menu-subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text);
+    font-weight: 300;
+}
+
+.menu-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+.menu-card {
+    background: var(--color-card-bg);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
+    border: 1px solid #e9ecef;
+}
+
+.menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.menu-card:hover::before {
+    opacity: 0.05;
+}
+
+.menu-card:hover .card-icon {
+    transform: scale(1.1);
+    color: var(--color-primary-dark);
+}
+
+.card-icon {
+    font-size: 4rem;
     margin-bottom: 1.5rem;
-    border-radius: 0.25rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    color: var(--color-primary);
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.month-title {
-    margin-bottom: 1rem;
-    font-weight: bold;
-    color: #0d6efd;
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
 }
 
+.card-description {
+    font-size: 0.95rem;
+    color: var(--color-secondary);
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+/* Animações */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilos para Outras Páginas (Formulários e Resultados) */
+
+/* Estilo do Card Principal */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.card-header {
+    background-color: var(--color-card-bg);
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.card-header h2, .card-header h5 {
+    color: var(--color-text);
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+/* Botão "Voltar ao Menu" Estilizado */
+.btn-menu-back {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-menu-back:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-text);
+    transform: translateY(-1px);
+}
+
+/* Estilos de Formulário */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.25rem rgba(137, 180, 248, 0.25);
+}
+
+/* Botões de Ação */
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    color: var(--color-text);
+}
+
+.btn-success { /* Botão de Exportar */
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+    color: var(--color-success-dark);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--color-success-dark);
+    border-color: var(--color-success-dark);
+    color: #ffffff;
+}
+
+/* Tabela de Resultados */
 .table-responsive {
     margin-top: 2rem;
 }
 
 .table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-    border-collapse: collapse;
-}
-
-.table th,
-.table td {
-    padding: 0.75rem;
-    vertical-align: top;
-    border-top: 1px solid #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .table thead th {
-    vertical-align: bottom;
+    background-color: #e9ecef; /* Cinza claro para cabeçalho */
+    color: var(--color-text);
+    font-weight: 600;
     border-bottom: 2px solid #dee2e6;
-    background-color: #f8f9fa;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.btn-export {
-    margin-top: 1rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.card {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    margin-bottom: 2rem;
-}
-
-.card-header {
     background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-.alert {
-    position: relative;
-    padding: 1rem 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
-    border-radius: 0.25rem;
-}
-
+/* Alertas */
 .alert-success {
-    color: #0f5132;
-    background-color: #d1e7dd;
-    border-color: #badbcc;
+    background-color: var(--color-success);
+    color: var(--color-success-dark);
+    border-color: #90ee90;
+    border-radius: 10px;
+}
+
+/* Responsividade (Mantido) */
+@media (max-width: 768px) {
+    .menu-title { font-size: 2rem; }
+    .menu-subtitle { font-size: 1rem; }
+    .menu-cards { grid-template-columns: 1fr; gap: 1.5rem; }
+    .menu-card { padding: 2rem 1.5rem; }
+    .card-icon { font-size: 3rem; }
+    body { padding-top: 1rem; padding-bottom: 1rem; }
 }

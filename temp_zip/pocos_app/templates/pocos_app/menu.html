@@ -3,21 +3,28 @@
 {% block title %}Menu Principal{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="text-center my-4">Menu Principal</h1>
-            <div class="list-group">
-                <a href="{% url 'gerar_tabela_consumo' %}" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">1. Projeção de Consumo de Água e Horas de Funcionamento</h5>
-                    <p class="mb-1">Gera a tabela de projeção de hidrômetro e horímetro com base nos parâmetros de entrada.</p>
-                </a>
-                <a href="{% url 'teste_bombeamento' %}" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">2. Simulação de Teste de Bombeamento e Recuperação</h5>
-                    <p class="mb-1">Gera o relatório de simulação de testes de campo com base nos parâmetros de entrada.</p>
-                </a>
+<div class="menu-container">
+    <div class="menu-header">
+        <h1 class="menu-title">Sistema de Análise de Poços</h1>
+        <p class="menu-subtitle">Selecione uma opção</p>
+    </div>
+    
+    <div class="menu-cards">
+        <a href="{% url 'gerar_tabela_consumo' %}" class="menu-card">
+            <div class="card-icon">
+                <i class="bi bi-graph-up-arrow"></i>
             </div>
-        </div>
+            <h3 class="card-title">Projeção de Consumo</h3>
+            <p class="card-description">Análise de consumo e horas de funcionamento</p>
+        </a>
+        
+        <a href="{% url 'teste_bombeamento' %}" class="menu-card">
+            <div class="card-icon">
+                <i class="bi bi-droplet-fill"></i>
+            </div>
+            <h3 class="card-title">Teste de Bombeamento</h3>
+            <p class="card-description">Simulação de testes de campo</p>
+        </a>
     </div>
 </div>
 {% endblock %}

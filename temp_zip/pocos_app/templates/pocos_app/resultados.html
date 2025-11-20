@@ -1,38 +1,45 @@
 {% extends 'pocos_app/base.html' %}
 
+{% block title %}Resultados da Projeção{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h2>Resultados Gerados</h2>
-            </div>
-            <div class="card-body">
-                <div class="alert alert-success">
-                    <h4>Tabela gerada com sucesso!</h4>
-                    <p>A tabela foi gerada com base nos parâmetros fornecidos. Você pode visualizá-la abaixo ou exportá-la para Excel.</p>
-                </div>
-                
-                <div class="text-center mb-4">
-                    <a href="{% url 'exportar_xlsx' %}" class="btn btn-success btn-lg">
-                        <i class="bi bi-file-earmark-excel"></i> Exportar para Excel
-                    </a>
-                    <a href="{% url 'gerar_tabela_consumo' %}" class="btn btn-secondary btn-lg ms-2">
-                        Voltar ao Formulário
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>Resultados da Projeção de Consumo</h2>
+                    <a href="{% url 'menu_principal' %}" class="btn btn-menu-back">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i>Voltar ao Menu
                     </a>
                 </div>
-                
-	<div class="table-responsive">
-	                    {{ tabela|safe }}
-	                </div>
-	                
-	                <style>
-	                    /* Força o alinhamento centralizado do cabeçalho da tabela gerada pelo pandas */
-	                    .table thead th {
-	                        text-align: center;
-	                        vertical-align: middle;
-	                    }
-	                </style>
+                <div class="card-body">
+                    <div class="alert alert-success">
+                        <h4>Tabela gerada com sucesso!</h4>
+                        <p>A tabela foi gerada com base nos parâmetros fornecidos. Você pode visualizá-la abaixo ou exportá-la para Excel.</p>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        <a href="{% url 'exportar_xlsx' %}" class="btn btn-success btn-lg">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Exportar para Excel
+                        </a>
+                        <a href="{% url 'gerar_tabela_consumo' %}" class="btn btn-secondary btn-lg ms-2">
+                            <i class="bi bi-arrow-left-square me-2"></i>Voltar ao Formulário
+                        </a>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        {{ tabela|safe }}
+                    </div>
+                    
+                    <style>
+                        /* Força o alinhamento centralizado do cabeçalho da tabela gerada pelo pandas */
+                        .table thead th {
+                            text-align: center;
+                            vertical-align: middle;
+                        }
+                    </style>
+                </div>
             </div>
         </div>
     </div>

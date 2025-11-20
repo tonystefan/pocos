@@ -1,35 +1,46 @@
 {% extends 'pocos_app/base.html' %}
 
+{% block title %}Resultados do Teste{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <a href="{% url 'teste_bombeamento' %}" class="btn btn-sm btn-outline-secondary float-end">Voltar ao Formulário</a>
-                <h2>Resultados da Simulação de Teste</h2>
-            </div>
-            <div class="card-body text-center">
-                <a href="{% url 'exportar_teste_xlsx' %}" class="btn btn-success btn-lg">Baixar Relatório em Excel</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>Resultados da Simulação de Teste</h2>
+                    <a href="{% url 'menu_principal' %}" class="btn btn-menu-back">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i>Voltar ao Menu
+                    </a>
+                </div>
+                <div class="card-body text-center">
+                    <a href="{% url 'exportar_teste_xlsx' %}" class="btn btn-success btn-lg">
+                        <i class="bi bi-file-earmark-excel me-2"></i>Baixar Relatório em Excel
+                    </a>
+                    <a href="{% url 'teste_bombeamento' %}" class="btn btn-secondary btn-lg ms-2">
+                        <i class="bi bi-arrow-left-square me-2"></i>Voltar ao Formulário
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="card mt-4">
-    <div class="card-header">
-        <h5 class="mb-0">Teste de Bombeamento</h5>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Teste de Bombeamento</h5>
+        </div>
+        <div class="card-body">
+            {{ df_bombeamento_html|safe }}
+        </div>
     </div>
-    <div class="card-body">
-        {{ df_bombeamento_html|safe }}
-    </div>
-</div>
 
-<div class="card mt-4">
-    <div class="card-header">
-        <h5 class="mb-0">Teste de Recuperação</h5>
-    </div>
-    <div class="card-body">
-        {{ df_recuperacao_html|safe }}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">Teste de Recuperação</h5>
+        </div>
+        <div class="card-body">
+            {{ df_recuperacao_html|safe }}
+        </div>
     </div>
 </div>
 {% endblock %}

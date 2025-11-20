@@ -1,188 +1,202 @@
 {% extends 'pocos_app/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Projeção de Consumo{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <a href="{% url 'menu_principal' %}" class="btn btn-sm btn-outline-secondary float-end">Voltar ao Menu</a>
-<h2>Parâmetros para Geração de Dados</h2>
-            </div>
-            <div class="card-body">
-                <form method="post" action="{% url 'gerar_tabela_consumo_process' %}">
-                    {% csrf_token %}
-                    
-	                    {% if form.non_field_errors %}
-	                        <div class="alert alert-danger">
-	                            {% for error in form.non_field_errors %}
-	                                <p>{{ error }}</p>
-	                            {% endfor %}
-	                        </div>
-	                    {% endif %}
-	                    
-	                    <!-- Parâmetros Gerais -->
-	                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h4>Parâmetros Gerais</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>Projeção de Consumo de Água e Horas de Funcionamento</h2>
+                    <a href="{% url 'menu_principal' %}" class="btn btn-menu-back">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i>Voltar ao Menu
+                    </a>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'gerar_tabela_consumo_process' %}">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Parâmetros Gerais -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h4>Parâmetros Gerais</h4>
 
-                            <div class="form-group">
-                                <label for="{{ form.data_inicio.id_for_label }}">{{ form.data_inicio.label }}</label>
-                                {{ form.data_inicio.errors }}
-                                <input type="date" name="{{ form.data_inicio.html_name }}" id="{{ form.data_inicio.id_for_label }}" class="form-control" value="{{ form.data_inicio.value|default:'2023-05-19' }}">
-                                <div class="form-text text-muted">{{ form.data_inicio.help_text }}</div>
+                                <div class="form-group">
+                                    <label for="{{ form.data_inicio.id_for_label }}">{{ form.data_inicio.label }}</label>
+                                    {{ form.data_inicio.errors }}
+                                    <input type="date" name="{{ form.data_inicio.html_name }}" id="{{ form.data_inicio.id_for_label }}" class="form-control" value="{{ form.data_inicio.value|default:'2023-05-19' }}">
+                                    <div class="form-text text-muted">{{ form.data_inicio.help_text }}</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.data_fim.id_for_label }}">{{ form.data_fim.label }}</label>
+                                    {{ form.data_fim.errors }}
+                                    <input type="date" name="{{ form.data_fim.html_name }}" id="{{ form.data_fim.id_for_label }}" class="form-control" value="{{ form.data_fim.value|default:'2025-10-31' }}">
+                                    <div class="form-text text-muted">{{ form.data_fim.help_text }}</div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.horimetro_inicial.id_for_label }}">{{ form.horimetro_inicial.label }}</label>
+                                    {{ form.horimetro_inicial.errors }}
+                                    <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" class="form-control" value="{{ form.horimetro_inicial.value|default:8640 }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.horimetro_final.id_for_label }}">{{ form.horimetro_final.label }}</label>
+                                    {{ form.horimetro_final.errors }}
+                                    <input type="number" step="0.001" name="{{ form.horimetro_final.html_name }}" id="{{ form.horimetro_final.id_for_label }}" class="form-control" value="{{ form.horimetro_final.value|default:11146 }}">
+                                </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="{{ form.data_fim.id_for_label }}">{{ form.data_fim.label }}</label>
-                                {{ form.data_fim.errors }}
-                                <input type="date" name="{{ form.data_fim.html_name }}" id="{{ form.data_fim.id_for_label }}" class="form-control" value="{{ form.data_fim.value|default:'2025-10-31' }}">
-                                <div class="form-text text-muted">{{ form.data_fim.help_text }}</div>
-                            </div>
+                            <div class="col-md-6">
+                                <h4>&nbsp;</h4>
 
-                            <div class="form-group">
-                                <label for="{{ form.horimetro_inicial.id_for_label }}">{{ form.horimetro_inicial.label }}</label>
-                                {{ form.horimetro_inicial.errors }}
-                                <input type="number" step="0.001" name="{{ form.horimetro_inicial.html_name }}" id="{{ form.horimetro_inicial.id_for_label }}" class="form-control" value="{{ form.horimetro_inicial.value|default:8640 }}">
-                            </div>
+                                <div class="form-group">
+                                    <label for="{{ form.hidrometro_inicial.id_for_label }}">{{ form.hidrometro_inicial.label }}</label>
+                                    {{ form.hidrometro_inicial.errors }}
+                                    <input type="number" step="0.001" name="{{ form.hidrometro_inicial.html_name }}" id="{{ form.hidrometro_inicial.id_for_label }}" class="form-control" value="{{ form.hidrometro_inicial.value|default:12174 }}">
+                                </div>
 
-                            <div class="form-group">
-                                <label for="{{ form.horimetro_final.id_for_label }}">{{ form.horimetro_final.label }}</label>
-                                {{ form.horimetro_final.errors }}
-                                <input type="number" step="0.001" name="{{ form.horimetro_final.html_name }}" id="{{ form.horimetro_final.id_for_label }}" class="form-control" value="{{ form.horimetro_final.value|default:11146 }}">
+                                <div class="form-group">
+                                    <label for="{{ form.hidrometro_final.id_for_label }}">{{ form.hidrometro_final.label }}</label>
+                                    {{ form.hidrometro_final.errors }}
+                                    <input type="number" step="0.001" name="{{ form.hidrometro_final.html_name }}" id="{{ form.hidrometro_final.id_for_label }}" class="form-control" value="{{ form.hidrometro_final.value|default:15758 }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.max_horimetro_diario.id_for_label }}">{{ form.max_horimetro_diario.label }}</label>
+                                    {{ form.max_horimetro_diario.errors }}
+                                    <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" class="form-control" value="{{ form.max_horimetro_diario.value|default:8 }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
+                                    {{ form.max_hidrometro_diario.errors }}
+                                    <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" class="form-control" value="{{ form.max_hidrometro_diario.value|default:32 }}">
+                                    <div class="form-text text-muted">{{ form.max_hidrometro_diario.help_text }}</div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <h4>&nbsp;</h4>
+                        <!-- Parâmetros de Níveis de Água -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h4>Níveis de Água</h4>
 
-                            <div class="form-group">
-                                <label for="{{ form.hidrometro_inicial.id_for_label }}">{{ form.hidrometro_inicial.label }}</label>
-                                {{ form.hidrometro_inicial.errors }}
-                                <input type="number" step="0.001" name="{{ form.hidrometro_inicial.html_name }}" id="{{ form.hidrometro_inicial.id_for_label }}" class="form-control" value="{{ form.hidrometro_inicial.value|default:12174 }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="{{ form.hidrometro_final.id_for_label }}">{{ form.hidrometro_final.label }}</label>
-                                {{ form.hidrometro_final.errors }}
-                                <input type="number" step="0.001" name="{{ form.hidrometro_final.html_name }}" id="{{ form.hidrometro_final.id_for_label }}" class="form-control" value="{{ form.hidrometro_final.value|default:15758 }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="{{ form.max_horimetro_diario.id_for_label }}">{{ form.max_horimetro_diario.label }}</label>
-                                {{ form.max_horimetro_diario.errors }}
-                                <input type="number" step="0.001" name="{{ form.max_horimetro_diario.html_name }}" id="{{ form.max_horimetro_diario.id_for_label }}" class="form-control" value="{{ form.max_horimetro_diario.value|default:8 }}">
-                            	                            <div class="form-group">
-	                                <label for="{{ form.max_hidrometro_diario.id_for_label }}">{{ form.max_hidrometro_diario.label }}</label>
-	                                {{ form.max_hidrometro_diario.errors }}
-	                                <input type="number" step="0.001" name="{{ form.max_hidrometro_diario.html_name }}" id="{{ form.max_hidrometro_diario.id_for_label }}" class="form-control" value="{{ form.max_hidrometro_diario.value|default:32 }}">
-	                                <div class="form-text text-muted">{{ form.max_hidrometro_diario.help_text }}</div>
-	                            </div>
-	                        </div>
-	                    </div>
-	
-	                    <!-- Parâmetros de Níveis de Água -->
-	                    <div class="row mb-4">
-	                        <div class="col-md-6">
-	                            <h4>Níveis de Água</h4>
-	
-	                            <div class="form-group">
-	                                <label for="{{ form.ne.id_for_label }}">{{ form.ne.label }}</label>
-	                                {{ form.ne.errors }}
-	                                <input type="number" step="0.01" name="{{ form.ne.html_name }}" id="{{ form.ne.id_for_label }}" class="form-control" value="{{ form.ne.value|default:10.0 }}">
-	                            </div>
-	
-	                            <div class="form-group">
-	                                <label for="{{ form.nd.id_for_label }}">{{ form.nd.label }}</label>
-	                                {{ form.nd.errors }}
-	                                <input type="number" step="0.01" name="{{ form.nd.html_name }}" id="{{ form.nd.id_for_label }}" class="form-control" value="{{ form.nd.value|default:15.0 }}">
-	                            </div>
-	                        </div>
-	
-	                        <div class="col-md-6">
-	                            <h4>Periodicidade de Apresentação</h4>
-	                            <div class="form-group">
-	                                <label>{{ form.apresentar_niveis.label }}</label>
-	                                {{ form.apresentar_niveis.errors }}
-	                                <div class="form-check">
-	                                    {% for radio in form.apresentar_niveis %}
-	                                        <div class="form-check">
-	                                            {{ radio.tag }}
-	                                            <label class="form-check-label" for="{{ radio.id_for_label }}">
-	                                                {{ radio.choice_label }}
-	                                            </label>
-	                                        </div>
-	                                    {% endfor %}
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>        <div class="col-md-12">
-                            <h4>Meses para Projeção de Consumo</h4>
-
-                            <div class="form-group">
-                                {{ form.meses_selecionados.errors }}
-
-                                <div class="row mb-3 align-items-center">
-                                    <div class="col-md-auto">
-                                        <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="selecionarTodosMeses()">Selecionar Todos</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="desselecionarTodosMeses()">Desmarcar Todos</button>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="{{ form.ne.id_for_label }}">{{ form.ne.label }}</label>
+                                    {{ form.ne.errors }}
+                                    <input type="number" step="0.01" name="{{ form.ne.html_name }}" id="{{ form.ne.id_for_label }}" class="form-control" value="{{ form.ne.value|default:10.0 }}">
                                 </div>
 
-                                <div class="row">
-                                    {% for choice in form.meses_selecionados %}
+                                <div class="form-group">
+                                    <label for="{{ form.nd.id_for_label }}">{{ form.nd.label }}</label>
+                                    {{ form.nd.errors }}
+                                    <input type="number" step="0.01" name="{{ form.nd.html_name }}" id="{{ form.nd.id_for_label }}" class="form-control" value="{{ form.nd.value|default:15.0 }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h4>Periodicidade de Apresentação</h4>
+                                <div class="form-group">
+                                    <label>{{ form.apresentar_niveis.label }}</label>
+                                    {{ form.apresentar_niveis.errors }}
+                                    <div class="form-check">
+                                        {% for radio in form.apresentar_niveis %}
+                                            <div class="form-check">
+                                                {{ radio.tag }}
+                                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                                    {{ radio.choice_label }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seção de Seleção de Meses -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h4>Meses para Projeção de Consumo</h4>
+
+                                <div class="form-group">
+                                    {{ form.meses_selecionados.errors }}
+
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-auto">
+                                            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="selecionarTodosMeses()">Selecionar Todos</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="desselecionarTodosMeses()">Desmarcar Todos</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        {% for choice in form.meses_selecionados %}
+                                            <div class="col-md-3 col-sm-6">
+                                                <div class="form-check">
+                                                    {{ choice.tag }}
+                                                    <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                                        {{ choice.choice_label }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div class="form-text text-muted mt-2">
+                                        Selecione os meses em que haverá projeção de consumo. Os registros começarão a partir da data de início especificada, mas os valores de consumo só serão aplicados nos meses selecionados.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção de Dias da Semana -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h4>Dias da Semana para Projeção de Consumo</h4>
+
+                                <div class="form-group">
+                                    <div class="row">
                                         <div class="col-md-3 col-sm-6">
                                             <div class="form-check">
-                                                {{ choice.tag }}
-                                                <label class="form-check-label" for="{{ choice.id_for_label }}">
-                                                    {{ choice.choice_label }}
+                                                {{ form.registrar_sabados }}
+                                                <label class="form-check-label" for="{{ form.registrar_sabados.id_for_label }}">
+                                                    {{ form.registrar_sabados.label }}
                                                 </label>
                                             </div>
                                         </div>
-                                    {% endfor %}
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="form-check">
+                                                {{ form.registrar_domingos }}
+                                                <label class="form-check-label" for="{{ form.registrar_domingos.id_for_label }}">
+                                                    {{ form.registrar_domingos.label }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-text text-muted mt-2">
+                                        Desmarque para zerar o consumo nos dias selecionados.
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
 
-	                            <div class="form-text text-muted mt-2">
-	                                    Selecione os meses em que haverá projeção de consumo. Os registros começarão a partir da data de início especificada, mas os valores de consumo só serão aplicados nos meses selecionados.
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	
-	                    <!-- Seção de Seleção de Meses -->
-	                    <div class="row mb-4">
-	                        <div class="col-md-12">
-	                            <h4>Dias da Semana para Projeção de Consumo</h4>
-	
-	                            <div class="form-group">
-	                                <div class="row">
-	                                    <div class="col-md-3 col-sm-6">
-	                                        <div class="form-check">
-	                                            {{ form.registrar_sabados }}
-	                                            <label class="form-check-label" for="{{ form.registrar_sabados.id_for_label }}">
-	                                                {{ form.registrar_sabados.label }}
-	                                            </label>
-	                                        </div>
-	                                    </div>
-	                                    <div class="col-md-3 col-sm-6">
-	                                        <div class="form-check">
-	                                            {{ form.registrar_domingos }}
-	                                            <label class="form-check-label" for="{{ form.registrar_domingos.id_for_label }}">
-	                                                {{ form.registrar_domingos.label }}
-	                                            </label>
-	                                        </div>
-	                                    </div>
-	                                </div>
-	                                <div class="form-text text-muted mt-2">
-	                                    Desmarque para zerar o consumo nos dias selecionados.
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">Gerar Tabela</button>
-                    </div>
-                </form>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-table me-2"></i>Gerar Tabela
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -200,4 +214,3 @@ function desselecionarTodosMeses() {
 }
 </script>
 {% endblock %}
-
