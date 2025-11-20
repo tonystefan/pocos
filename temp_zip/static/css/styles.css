@@ -1,17 +1,17 @@
-/* Paleta de Cores Sóbrias/Pastéis */
-/* Fundo: Cinza Claro Suave */
-/* Primária (Ação): Azul Pastel */
-/* Secundária (Neutro): Cinza Médio */
-/* Destaque: Verde Menta Suave */
+/* Paleta de Cores Sóbrias/Cinza */
+/* Fundo: Branco/Cinza Claro */
+/* Primária (Ação): Cinza Médio (Neutro) */
+/* Secundária (Neutro): Cinza Claro */
+/* Destaque: Verde Menta Suave (Mantido para Sucesso/Exportar) */
 
 :root {
     --color-background: #f8f9fa; /* Cinza Claro Suave */
-    --color-primary: #89b4f8; /* Azul Pastel */
-    --color-primary-dark: #669df6;
-    --color-secondary: #adb5bd; /* Cinza Médio */
+    --color-primary: #6c757d; /* Cinza Médio (Neutro para Ação) */
+    --color-primary-dark: #5a6268;
+    --color-secondary: #e9ecef; /* Cinza Claro para Borda/Destaque */
     --color-text: #343a40; /* Cinza Escuro para Texto */
     --color-card-bg: #ffffff;
-    --color-success: #a7f0ba; /* Verde Menta Suave */
+    --color-success: #a7f0ba; /* Verde Menta Suave (Mantido para Sucesso/Exportar) */
     --color-success-dark: #6aa84f;
 }
 
@@ -27,7 +27,7 @@ body {
     background-color: var(--color-background);
     min-height: 100vh;
     color: var(--color-text);
-    padding-top: 2rem; /* Adicionado padding para o conteúdo das páginas internas */
+    padding-top: 2rem;
     padding-bottom: 2rem;
 }
 
@@ -39,7 +39,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Gradiente Pastel */
+    background-color: #ffffff; /* Fundo branco puro */
 }
 
 .menu-header {
@@ -82,7 +82,7 @@ body {
     position: relative;
     overflow: hidden;
     animation: fadeInUp 0.8s ease-out;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--color-secondary);
 }
 
 .menu-card::before {
@@ -92,7 +92,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    background-color: var(--color-primary); /* Cor primária cinza */
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -114,7 +114,7 @@ body {
 .card-icon {
     font-size: 4rem;
     margin-bottom: 1.5rem;
-    color: var(--color-primary);
+    color: var(--color-primary); /* Ícone na cor primária cinza */
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
@@ -127,7 +127,7 @@ body {
 
 .card-description {
     font-size: 0.95rem;
-    color: var(--color-secondary);
+    color: var(--color-primary);
     line-height: 1.5;
     font-weight: 400;
 }
@@ -155,7 +155,7 @@ body {
 
 .card-header {
     background-color: var(--color-card-bg);
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--color-secondary);
     padding: 1.5rem;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -174,7 +174,7 @@ body {
 /* Botão "Voltar ao Menu" Estilizado */
 .btn-menu-back {
     background-color: var(--color-primary);
-    color: var(--color-text);
+    color: #ffffff; /* Texto branco para contraste no cinza */
     border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
@@ -184,7 +184,7 @@ body {
 
 .btn-menu-back:hover {
     background-color: var(--color-primary-dark);
-    color: var(--color-text);
+    color: #ffffff;
     transform: translateY(-1px);
 }
 
@@ -202,14 +202,14 @@ body {
 
 .form-control:focus, .form-select:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 0.25rem rgba(137, 180, 248, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25); /* Sombra cinza */
 }
 
 /* Botões de Ação */
 .btn-primary {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
-    color: var(--color-text);
+    color: #ffffff;
     font-weight: 600;
     border-radius: 10px;
     padding: 0.75rem 1.5rem;
@@ -219,6 +219,22 @@ body {
 .btn-primary:hover {
     background-color: var(--color-primary-dark);
     border-color: var(--color-primary-dark);
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+    color: var(--color-text);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #dee2e6;
+    border-color: #dee2e6;
     color: var(--color-text);
 }
 
@@ -250,14 +266,14 @@ body {
 }
 
 .table thead th {
-    background-color: #e9ecef; /* Cinza claro para cabeçalho */
+    background-color: var(--color-secondary); /* Cinza claro para cabeçalho */
     color: var(--color-text);
     font-weight: 600;
     border-bottom: 2px solid #dee2e6;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f8f9fa;
+    background-color: #f1f3f5; /* Cinza muito claro para listras */
 }
 
 /* Alertas */
