@@ -1,12 +1,12 @@
-  {
+{
     "version": 2,
     "builds": [
       {
         "src": "pocos_project/wsgi.py",
         "use": "@vercel/python",
         "config": {
-          "maxLambdaSize": "15mb",          
-          "runtime": "Python3.11"
+          "maxLambdaSize": "15mb",
+          "runtime": "Python3.9"
         }
       },
       {
@@ -18,6 +18,10 @@
       }
     ],
     "routes": [
+      {
+        "src": "/staticfiles/(.*)",
+        "dest": "/staticfiles/$1"
+      },
       {
         "src": "/(.*)",
         "dest": "pocos_project/wsgi.py"
