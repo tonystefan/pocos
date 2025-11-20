@@ -11,7 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-key-for-development-only'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+import os
+
+IS_VERCEL = os.environ.get('VERCEL', 'False') == 'True'
+
+DEBUG = not IS_VERCEL # DEBUG é True localmente, False no Vercel
 
 ALLOWED_HOSTS = [
     '*',
@@ -135,4 +139,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Configuração do Whitenoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
