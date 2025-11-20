@@ -5,8 +5,7 @@
         "src": "pocos_project/wsgi.py",
         "use": "@vercel/python",
         "config": {
-          "maxLambdaSize": "15mb",
-          "runtime": "Python3.11"
+          "maxLambdaSize": "15mb"          "runtime": "Python3.11"11"
         }
       },
       {

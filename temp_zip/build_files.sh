@@ -16,7 +16,3 @@ python manage.py collectstatic --noinput --clear
 echo "Make Migration..."
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
-
-# Remover comandos npm/node, pois o projeto é puramente Django/Python
-# npm install
-# npm start
