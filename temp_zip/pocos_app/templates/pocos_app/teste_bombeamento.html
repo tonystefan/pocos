@@ -1,0 +1,61 @@
+{% extends 'pocos_app/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a href="{% url 'menu_principal' %}" class="btn btn-sm btn-outline-secondary float-end">Voltar ao Menu</a>
+                <h2>Simulação de Teste de Bombeamento e Recuperação</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'teste_bombeamento_process' %}">
+                    {% csrf_token %}
+
+                    {% if form_bombeamento.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form_bombeamento.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4>Parâmetros do Teste de Bombeamento</h4>
+                            {% for field in form_bombeamento %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field.errors }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="form-text text-muted">{{ field.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h4>Parâmetros do Teste de Recuperação</h4>
+                            {% for field in form_recuperacao %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field.errors }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="form-text text-muted">{{ field.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Gerar Relatório de Teste</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

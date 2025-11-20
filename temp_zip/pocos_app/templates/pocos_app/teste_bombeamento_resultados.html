@@ -1,0 +1,35 @@
+{% extends 'pocos_app/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a href="{% url 'teste_bombeamento' %}" class="btn btn-sm btn-outline-secondary float-end">Voltar ao Formulário</a>
+                <h2>Resultados da Simulação de Teste</h2>
+            </div>
+            <div class="card-body text-center">
+                <a href="{% url 'exportar_teste_xlsx' %}" class="btn btn-success btn-lg">Baixar Relatório em Excel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Teste de Bombeamento</h5>
+    </div>
+    <div class="card-body">
+        {{ df_bombeamento_html|safe }}
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Teste de Recuperação</h5>
+    </div>
+    <div class="card-body">
+        {{ df_recuperacao_html|safe }}
+    </div>
+</div>
+{% endblock %}

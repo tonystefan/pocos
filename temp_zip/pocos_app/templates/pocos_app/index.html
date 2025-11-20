@@ -5,10 +5,11 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h2>Parâmetros para Geração de Dados</h2>
+                <a href="{% url 'menu_principal' %}" class="btn btn-sm btn-outline-secondary float-end">Voltar ao Menu</a>
+<h2>Parâmetros para Geração de Dados</h2>
             </div>
             <div class="card-body">
-                <form method="post" action="{% url 'gerar_tabela' %}">
+                <form method="post" action="{% url 'gerar_tabela_consumo_process' %}">
                     {% csrf_token %}
                     
 	                    {% if form.non_field_errors %}

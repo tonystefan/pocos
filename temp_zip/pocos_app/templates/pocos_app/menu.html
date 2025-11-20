@@ -1,0 +1,23 @@
+{% extends "pocos_app/base.html" %}
+
+{% block title %}Menu Principal{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-center my-4">Menu Principal</h1>
+            <div class="list-group">
+                <a href="{% url 'gerar_tabela_consumo' %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">1. Projeção de Consumo de Água e Horas de Funcionamento</h5>
+                    <p class="mb-1">Gera a tabela de projeção de hidrômetro e horímetro com base nos parâmetros de entrada.</p>
+                </a>
+                <a href="{% url 'teste_bombeamento' %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">2. Simulação de Teste de Bombeamento e Recuperação</h5>
+                    <p class="mb-1">Gera o relatório de simulação de testes de campo com base nos parâmetros de entrada.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
