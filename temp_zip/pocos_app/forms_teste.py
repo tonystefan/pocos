@@ -1,5 +1,5 @@
 from django import forms
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time # Importar time
 
 class TesteBombeamentoForm(forms.Form):
     # Parâmetros do Teste de Bombeamento
@@ -10,8 +10,8 @@ class TesteBombeamentoForm(forms.Form):
     )
     hora_inicial = forms.TimeField(
         label='Hora de Início do Teste',
-        widget=forms.TimeInput(attrs={'type': 'time'}),
-        initial=datetime.now().time()
+        initial=time(datetime.now().hour, datetime.now().minute, 0), # Inicializa com segundos zerados
+        widget=forms.TimeInput(attrs={'type': 'time', 'step': '60'}) # Permite apenas minutos
     )
     nivel_inicial = forms.FloatField(label='Nível Inicial (m)', min_value=0)
     nivel_final = forms.FloatField(label='Nível Final (m)', min_value=0)
@@ -56,13 +56,13 @@ class TesteRecuperacaoForm(forms.Form):
     )
     hora_inicial = forms.TimeField(
         label='Hora de Início da Recuperação',
-        widget=forms.TimeInput(attrs={'type': 'time'}),
-        initial=datetime.now().time()
+        initial=time(datetime.now().hour, datetime.now().minute, 0), # Inicializa com segundos zerados
+        widget=forms.TimeInput(attrs={'type': 'time', 'step': '60'}) # Permite apenas minutos
     )
     hora_final = forms.TimeField(
         label='Hora de Fim da Recuperação',
-        widget=forms.TimeInput(attrs={'type': 'time'}),
-        initial=(datetime.now() + timedelta(hours=1)).time()
+        initial=time((datetime.now() + timedelta(hours=1)).hour, (datetime.now() + timedelta(hours=1)).minute, 0), # Inicializa com segundos zerados
+        widget=forms.TimeInput(attrs={'type': 'time', 'step': '60'}) # Permite apenas minutos
     )
     
     # Nível Inicial e Final serão herdados do Teste de Bombeamento

@@ -8,15 +8,16 @@ from datetime import date, time
 import pandas as pd
 import json # Import json for pretty printing
 
-def menu_principal(request):
+def menu_principal(request ):
     return render(request, 'pocos_app/menu.html')
 
 def teste_bombeamento_view(request):
     """
     View para a página inicial do Teste de Bombeamento com os formulários.
     """
-    form_bombeamento = TesteBombeamentoForm()
-    form_recuperacao = TesteRecuperacaoForm()
+    # Adicionar prefixos para evitar conflito de nomes de campos
+    form_bombeamento = TesteBombeamentoForm(prefix='bombeamento')
+    form_recuperacao = TesteRecuperacaoForm(prefix='recuperacao')
     return render(request, 'pocos_app/teste_bombeamento.html', {
                 'form_bombeamento': form_bombeamento,
                 'form_recuperacao': form_recuperacao
@@ -27,8 +28,9 @@ def teste_bombeamento_process(request):
     View para processar os formulários e gerar o relatório de teste.
     """
     if request.method == 'POST':
-        form_bombeamento = TesteBombeamentoForm(request.POST)
-        form_recuperacao = TesteRecuperacaoForm(request.POST)
+        # Adicionar prefixos para evitar conflito de nomes de campos
+        form_bombeamento = TesteBombeamentoForm(request.POST, prefix='bombeamento')
+        form_recuperacao = TesteRecuperacaoForm(request.POST, prefix='recuperacao')
         
         if form_bombeamento.is_valid() and form_recuperacao.is_valid():
             params_bombeamento = form_bombeamento.cleaned_data
@@ -247,4 +249,3 @@ def exportar_xlsx(request):
     response['Content-Disposition'] = 'attachment; filename=dados_poco.xlsx'
     print("Enviando resposta com o arquivo XLSX.")
     return response
-
