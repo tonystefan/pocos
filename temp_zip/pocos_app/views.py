@@ -4,13 +4,16 @@ from .forms import ParametrosForm
 from .forms_teste import TesteBombeamentoForm, TesteRecuperacaoForm
 from .utils import gerar_tabela_dados, exportar_para_xlsx
 from .utils_teste import gerar_teste_bombeamento, gerar_teste_recuperacao, gerar_teste_xlsx_file
+from acesso.utils import acesso_requerido # Importar o decorator
 from datetime import date, time
 import pandas as pd
 import json # Import json for pretty printing
 
+@acesso_requerido(nome_modulo='Menu Principal') # Adicionar um módulo para o menu principal, se necessário
 def menu_principal(request ):
     return render(request, 'pocos_app/menu.html')
 
+@acesso_requerido(nome_modulo='Teste de Bombeamento')
 def teste_bombeamento_view(request):
     """
     View para a página inicial do Teste de Bombeamento com os formulários.
@@ -23,6 +26,7 @@ def teste_bombeamento_view(request):
                 'form_recuperacao': form_recuperacao
             })
 
+@acesso_requerido(nome_modulo='Teste de Bombeamento')
 def teste_bombeamento_process(request):
     """
     View para processar os formulários e gerar o relatório de teste.
@@ -93,6 +97,7 @@ def teste_bombeamento_process(request):
     
     return redirect('teste_bombeamento')
 
+@acesso_requerido(nome_modulo='Teste de Bombeamento')
 def exportar_teste_xlsx(request):
     """
     View para exportar os testes de Bombeamento e Recuperação para XLSX.
@@ -137,6 +142,7 @@ def exportar_teste_xlsx(request):
     return response
     return render(request, 'pocos_app/menu.html')
 
+@acesso_requerido(nome_modulo='Gerar Tabela de Consumo')
 def gerar_tabela_consumo_view(request):
     """
     View para a página inicial com o formulário de parâmetros.
@@ -144,6 +150,7 @@ def gerar_tabela_consumo_view(request):
     form = ParametrosForm()
     return render(request, 'pocos_app/index.html', {'form': form})
 
+@acesso_requerido(nome_modulo='Gerar Tabela de Consumo')
 def gerar_tabela_consumo_process(request):
     """
     View para processar o formulário e gerar a tabela de dados.
@@ -186,6 +193,7 @@ def gerar_tabela_consumo_process(request):
     # Se o formulário não for válido, voltar para a página inicial com o formulário
     return render(request, 'pocos_app/index.html', {'form': form})
 
+@acesso_requerido(nome_modulo='Gerar Tabela de Consumo')
 def exportar_xlsx(request):
     """
     View para exportar a tabela de Consumo para XLSX.

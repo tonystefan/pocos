@@ -1,15 +1,24 @@
 {% extends "pocos_app/base.html" %}
+{% load static %}
+{% load acesso_tags %}
 
 {% block title %}Menu Principal{% endblock %}
 
 {% block content %}
 <div class="menu-container">
     <div class="menu-header">
+        {% if user.is_authenticated %}
+            <p class="text-end">Olá, {{ user.username }}! <a href="{% url 'admin:logout' %}">Sair</a></p>
+        {% else %}
+            <p class="text-end"><a href="{% url 'admin:login' %}?next={{ request.path }}">Entrar</a></p>
+        {% endif %}
         <h1 class="menu-title">Sistema de Análise de Poços</h1>
         <p class="menu-subtitle">Selecione uma opção</p>
     </div>
     
     <div class="menu-cards">
+        {% has_access 'Gerar Tabela de Consumo' as pode_acessar_consumo %}
+        {% if pode_acessar_consumo %}
         <a href="{% url 'gerar_tabela_consumo' %}" class="menu-card">
             <div class="card-icon">
                 <i class="bi bi-graph-up-arrow"></i>
@@ -17,7 +26,10 @@
             <h3 class="card-title">Projeção de Consumo</h3>
             <p class="card-description">Análise de consumo e horas de funcionamento</p>
         </a>
+        {% endif %}
         
+        {% has_access 'Teste de Bombeamento' as pode_acessar_teste %}
+        {% if pode_acessar_teste %}
         <a href="{% url 'teste_bombeamento' %}" class="menu-card">
             <div class="card-icon">
                 <i class="bi bi-droplet-fill"></i>
@@ -25,6 +37,7 @@
             <h3 class="card-title">Teste de Bombeamento</h3>
             <p class="card-description">Simulação de testes de campo</p>
         </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
